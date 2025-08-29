@@ -6,7 +6,6 @@
   <title>PDF Page Splitter with GHL Upload</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'></svg>">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -84,82 +83,57 @@
   <div id="uploadStatus"></div>
 
   <script>
-    const { jsPDF } = window.jspdf;
     let pdfUrls = [];
-    let accessToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2NDg2ODk1Ljc2OCwiZXhwIjoxNzU2NTczMjk1Ljc2OH0.c70OJge0_4IdX15Wall7e6d5e94oVLsXD2l_w3Ynd5_aSK7ATQDxU-VEBI71CFy3p5N8z-C3gcibheNZtknAmIth6GQj4iDrAOK3c9eud-6Oxxin45Neb60t1tqVE_abQSaEfj7Slc0ZkqnsSvCJUX_MjbuFLcIWxGXMYhDtXxWSWcmxavWNoo1QiPPCdjUBR4bkFOZfOne3wubUuyqWNq8ruc0heYj8EFZSj5vptDlAUga5XMQFicF3tW7kaYJMsjzKS8iY_Sd2Z27EGzxPMWA6uzIcoTGNYI2suQjPcm7Ilt_JOK5q15DsAc4qHLKwS9jzZdwlIUJMY9hBq2TzkfzO1S-EvP_PmeHDGAFT91pZmfrYeNj5eh16-dtZjKe1JYos9zlIn94iPrgecUC2_kxKTzpFVLinyZSb9ujahqbUiKZ4O2VifH2SX9JwRb5DHAOUkiYUSW4a2g1vDbKmYEVMoWgB08tFdFn_djxqQy06UgEskZQfXOMgLTPjr-VMUYBm_FbrxdJtE2OkAeP8OSjsK5XeQMZzX1IoaMeGM86ulBAl8WqhJelTaXoyop4ev12qYvs1-NdIa7kSuepPTb-NQGwhpB9nmk9NrU-9DStt2Yul6pSK_t1rqTyoJsU1YxW7zJWYkN79B739E2zPqfo6jE9WTNxM81mH6aq6wuM';
-    
-    
-    async function refreshAccessToken() {
-      const url = 'https://services.leadconnectorhq.com/oauth/token';
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Accept: 'application/json'
-        },
-        body: new URLSearchParams({
-          client_id: '68a4b320048b573b06efa340-meitha6v',
-          client_secret: '883e200b-ff47-4361-9be1-635f54158e93',
-         grant_type: 'authorization_code',
-    code: '0a5b981240b17d7b0fd2f880e52bf8a57ac71148',
-    refresh_token: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2NDg2ODk1Ljc3NywiZXhwIjoxNzg4MDIyODk1Ljc3NywidW5pcXVlSWQiOiI1ZTE0ZmQxOS0zNDkyLTRkOWMtYWIxYi0wNjUwMzA2NGJhNDUiLCJ2IjoiMiJ9.ecnUxIaLYPEFAHXQyGggLlFqgmG2xtB4ByQjL0QJ3bLiERh_cmWr2UF_2Jf2_phHvFeBrcdqPGzzjcNz7HpIWTaDVXInFbLxrEISHV0JoZlAu9W7gxMwZf7V8K6VfxfMUMp1mwc1hA3aG7GnnhprtBqBdSMi8ZaEFw95VQjeTZxNX7PCcGQP-a-eCtqG0pVgQdeg2FTrpzfX9ATOktzGpYX6YMRxFiKvdfMyoyqR545o-qk-k54wGE3HmYy-UChF7moreOdzec6ffN_ypQR0_CkUoXtT6VrJ2KG-y9a6v3PWKLCup_yPOBFbmYFJfQ6EJT88BxkrD6wR9-IXtzuZK5kHUpLNdegLUMevNpEA1FTji0JqgMA0nbV3020o77AFzl_OsikMJann_f0w_7xzMwI2K_7t67ObTzGLu1HKOFSGtlSvjf-p9I4MOqK7fkZeVDGUMZIZPsIVPtkWm4wkG8KXxJfI1xqwEhSaQ-FGmWt3H9w5Y3rjuyFU0s1-7oKEyf8deh6Mu8UYslt6AV0V-WCxyQ0pp3L5N5DY1xmOeRVGZduEvg8G5arokGeY0TfBvu6PH4fQBGCu-5WVTDMeigqBfzufSSyL6HYQUoc5Jp731koZRiFmUye21JGPajkLy3GEoofmCQKRBoACjJ-IIdXe07AiP4F5xkmeKo020SI',
-          user_type: 'Location',
-          redirect_uri: 'http://localhost:3000/oauth/callback'
-        })
-      };
-
-      try {
-        const response = await fetch(url, options);
-        const data = await response.json();
-        if (!response.ok) {
-          console.error('OAuth API Response:', data);
-          throw new Error(data.message || `Failed to refresh access token (Status: ${response.status})`);
-        }
-        accessToken = data.access_token; // Update the access token
-        return data.access_token;
-      } catch (error) {
-        console.error('Error refreshing access token:', error);
-        throw error;
-      }
-    }
+    const accessToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSIsImNvbnRhY3RzLnJlYWRvbmx5IiwiY29udGFjdHMud3JpdGUiXSwiY2xpZW50IjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwIiwidmVyc2lvbklkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwIiwiY2xpZW50S2V5IjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2In0sImlhdCI6MTc1NjQ5MzMwOC41MTcsImV4cCI6MTc1NjU3OTcwOC41MTd9.SbgkpxDLlOYgFTp5rnMfi2d-wKWtSZnZZOeAVTehkMnDmNReQA_-E92RKT57NSFBMVqrPumfN1kk8tRmswWiMQCkyxrIwHTnV7HtD32iW6-tc0_49FO30TjDH60mB8amkTVlf3ByVjBtCk9x4vr9CfRORzsrsRgGbXrOU5520d5KhuvN1enzRD1DVg_oKW51qcwm-X3aePc_2QAHcWSWI8GEndQH7gKSR00mrrG5KfvyBafzGIz8Y-jFr5C-ttLO61nD6kDuWAjlk-ewPDlPxq2ytZmGMLIMirnr1ywudTjUeM0bSCQNAqd7RYNChdRceMLQNhu0xsaPt5Kz-v5f4YyrOhnpmIGlC1XQYTo0xGcnqDPWAR-wvHuslIzEyyUUUJqGtkhrJmPhs-37dFG4hXXhCskdZSqBVQnhdQVxA6sEQCTJ0lXK0uTbTE6qUoa2hGOHcCMjt667SkKyLJMcaP-kfXznEsYik81CbSF5oPYvCt3uP14-MdhfkPe9U6E222PUtQ-9APRrcMuEn2KvIRE3UbNN0yYkMfJ8q94z5eZ4AaZINpI8XfF8BN6mMgMDRc9tlvSYcLRwixRYRoPhjwVyVNsbQdslwE26LrZ-TJ_t3_ziwTmp4K6DUoyZshGlASRa4s_mLLRtioZDaFb6cSDbebRkKd5sulJxlDJsJ_U';
 
     async function uploadToGHLMedia(pdfBlob, fileName, locationId) {
       const url = 'https://services.leadconnectorhq.com/medias/upload-file';
-      const formData = new FormData();
-      formData.append('file', pdfBlob, fileName);
-      formData.append('locationId', locationId);
+      const form = new FormData();
+      form.append('file', pdfBlob, fileName);
+      form.append('hosted', '');
+      form.append('fileUrl', '');
+      form.append('name', fileName);
+      form.append('parentId', '');
 
       const options = {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          Version: '2021-07-28',
           Accept: 'application/json'
         },
-        body: formData
+        body: form
       };
 
       try {
+        console.log(`Attempting to upload ${fileName} to GHL Media Library`);
+        console.log(`Using access token: ${accessToken.substring(0, 20)}...`);
+        
         const response = await fetch(url, options);
         const data = await response.json();
+        console.log(`Upload response status: ${response.status}`);
+        console.log(`Upload response data:`, data);
+
         if (!response.ok) {
-          if (response.status === 401) {
-            // Token expired or invalid, try refreshing
-            const newAccessToken = await refreshAccessToken();
-            options.headers.Authorization = `Bearer ${newAccessToken}`;
-            const retryResponse = await fetch(url, options);
-            const retryData = await retryResponse.json();
-            if (!retryResponse.ok) {
-              console.error('GHL Upload Retry Response:', retryData);
-              throw new Error(retryData.message || `Failed to upload ${fileName} after retry (Status: ${retryResponse.status})`);
-            }
-            return retryData;
-          }
           console.error('GHL Upload Response:', data);
+          if (response.status === 401) {
+            throw new Error('Unauthorized: Invalid or expired access token. Please update the access token in the code.');
+          } else if (response.status === 400) {
+            throw new Error(`Bad Request: ${data.message || 'Invalid request parameters'}`);
+          } else if (response.status === 403) {
+            throw new Error(`Forbidden: ${data.message || 'Access denied'}`);
+          } else if (response.status === 413) {
+            throw new Error(`Payload Too Large: ${data.message || 'File too large'}`);
+          }
           throw new Error(data.message || `Failed to upload ${fileName} (Status: ${response.status})`);
         }
+        console.log(`Successfully uploaded ${fileName} to GHL Media Library`);
         return data;
       } catch (error) {
         console.error(`Error uploading ${fileName} to GHL:`, error);
+        if (error instanceof TypeError && error.message.includes('fetch')) {
+          throw new Error(`Network error: Unable to connect to GHL server. Please check your internet connection. (${error.message})`);
+        }
         throw error;
       }
     }
@@ -173,29 +147,34 @@
       const pdfLinksContainer = document.getElementById('pdfLinks');
       const uploadStatus = document.getElementById('uploadStatus');
 
-      // Clear previous links and URLs
       pdfLinksContainer.innerHTML = '';
       uploadStatus.innerHTML = '';
       pdfUrls.forEach(url => URL.revokeObjectURL(url));
       pdfUrls = [];
 
-      // Validate inputs
       if (!firstName || !lastName || !clientId || !locationId) {
         alert('Please fill in all fields (First Name, Last Name, Client ID, Location ID).');
         return;
       }
+
       if (!pdfFileInput.files || pdfFileInput.files.length === 0) {
         alert('Please upload a PDF file.');
         return;
       }
 
       try {
-        // Read the uploaded PDF file
         const file = pdfFileInput.files[0];
         const arrayBuffer = await file.arrayBuffer();
-        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
 
-        // Get the number of pages
+        // Validate PDF and log first 10 bytes for debugging
+        const firstBytes = new Uint8Array(arrayBuffer.slice(0, 10));
+        const pdfSignature = new TextDecoder().decode(firstBytes);
+        console.log('First 10 bytes of uploaded file:', pdfSignature, firstBytes);
+        if (!pdfSignature.startsWith('%PDF-')) {
+          throw new Error('Uploaded file is not a valid PDF (missing PDF header). First 10 bytes: ' + pdfSignature);
+        }
+
+        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
         const pageCount = pdfDoc.getPageCount();
 
         if (pageCount === 0) {
@@ -205,47 +184,30 @@
 
         uploadStatus.innerHTML = 'Splitting PDF and generating links...';
 
-        // Process each page
         for (let i = 0; i < pageCount; i++) {
-          // Create a new PDF document for each page
           const newDoc = await PDFLib.PDFDocument.create();
           const [page] = await newDoc.copyPages(pdfDoc, [i]);
           newDoc.addPage(page);
 
-          // Create header using jsPDF
-          const tempDoc = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'a4'
-          });
-          tempDoc.setFont('Helvetica', 'bold');
-          tempDoc.setFontSize(16);
-          const heading = `${firstName} ${lastName} - Client ID: ${clientId} -${i + 1}`;
-          tempDoc.text(heading, 10, 10);
+          // Create blank header page
+          const headerDoc = await PDFLib.PDFDocument.create();
+          const headerPage = headerDoc.addPage([595, 842]); // A4 size in points
 
-          // Save header as PDF
-          const headerPdfBytes = tempDoc.output('arraybuffer');
-          const headerDoc = await PDFLib.PDFDocument.load(headerPdfBytes);
-          const [headerPage] = await newDoc.copyPages(headerDoc, [0]);
+          const [headerPageCopy] = await newDoc.copyPages(headerDoc, [0]);
+          newDoc.insertPage(0, headerPageCopy);
 
-          // Insert header page
-          newDoc.insertPage(0, headerPage);
-
-          // Save the combined PDF
           const pdfBytes = await newDoc.save();
           const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
           const pdfUrl = URL.createObjectURL(pdfBlob);
           pdfUrls.push(pdfUrl);
 
-          // Create download link
           const fileName = `${firstName}_${lastName}_${clientId}_Page${i + 1}.pdf`;
           const link = document.createElement('a');
           link.href = pdfUrl;
           link.download = fileName;
-          link.textContent = `Download ${fileName}`;
+          link.textContent = `${firstName} ${lastName} ${clientId} Page ${i + 1}`;
           pdfLinksContainer.appendChild(link);
 
-          // Upload to GHL
           uploadStatus.innerHTML = `Uploading ${fileName} to GHL...`;
           await uploadToGHLMedia(pdfBlob, fileName, locationId);
           uploadStatus.innerHTML += `<br>Uploaded ${fileName} to GHL Media Library.`;
@@ -256,11 +218,14 @@
       } catch (error) {
         uploadStatus.className = 'error';
         uploadStatus.innerHTML = `Error: ${error.message}`;
+        console.error('Full error details:', error);
+        if (error.stack) {
+          console.error('Error stack trace:', error.stack);
+        }
         alert(`An error occurred: ${error.message}`);
       }
     }
 
-    // Clean up URLs on page unload
     window.addEventListener('unload', () => {
       pdfUrls.forEach(url => URL.revokeObjectURL(url));
     });
