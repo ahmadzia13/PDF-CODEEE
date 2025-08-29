@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Page Splitter with GHL Upload</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'></svg>">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #pdfLinks {
+      margin-top: 20px;
+    }
+    #pdfLinks a {
+      display: block;
+      margin: 5px 0;
+      color: #007bff;
+      text-decoration: none;
+    }
+    #pdfLinks a:hover {
+      text-decoration: underline;
+    }
+    #uploadStatus {
+      margin-top: 20px;
+      color: green;
+    }
+    #uploadStatus.error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Split PDF and Upload to GHL Media Library</h1>
+  <div class="form-group">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" placeholder="Enter first name">
+  </div>
+  <div class="form-group">
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" placeholder="Enter last name">
+  </div>
+  <div class="form-group">
+    <label for="clientId">Client ID:</label>
+    <input type="text" id="clientId" placeholder="Enter client ID">
+  </div>
+  <div class="form-group">
+    <label for="locationId">GHL Location ID:</label>
+    <input type="text" id="locationId" value="qQoaeHK8TVVJCWXTtNWN" placeholder="Enter GHL Location ID">
+  </div>
+  <div class="form-group">
+    <label for="pdfFile">Upload PDF:</label>
+    <input type="file" id="pdfFile" accept="application/pdf">
+  </div>
+  <button onclick="splitAndUploadPDF()">Split and Upload PDFs</button>
+  <div id="pdfLinks"></div>
+  <div id="uploadStatus"></div>
+
+  <script>
+    const { jsPDF } = window.jspdf;
+    let pdfUrls = [];
+    let accessToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2NDg2ODk1Ljc2OCwiZXhwIjoxNzU2NTczMjk1Ljc2OH0.c70OJge0_4IdX15Wall7e6d5e94oVLsXD2l_w3Ynd5_aSK7ATQDxU-VEBI71CFy3p5N8z-C3gcibheNZtknAmIth6GQj4iDrAOK3c9eud-6Oxxin45Neb60t1tqVE_abQSaEfj7Slc0ZkqnsSvCJUX_MjbuFLcIWxGXMYhDtXxWSWcmxavWNoo1QiPPCdjUBR4bkFOZfOne3wubUuyqWNq8ruc0heYj8EFZSj5vptDlAUga5XMQFicF3tW7kaYJMsjzKS8iY_Sd2Z27EGzxPMWA6uzIcoTGNYI2suQjPcm7Ilt_JOK5q15DsAc4qHLKwS9jzZdwlIUJMY9hBq2TzkfzO1S-EvP_PmeHDGAFT91pZmfrYeNj5eh16-dtZjKe1JYos9zlIn94iPrgecUC2_kxKTzpFVLinyZSb9ujahqbUiKZ4O2VifH2SX9JwRb5DHAOUkiYUSW4a2g1vDbKmYEVMoWgB08tFdFn_djxqQy06UgEskZQfXOMgLTPjr-VMUYBm_FbrxdJtE2OkAeP8OSjsK5XeQMZzX1IoaMeGM86ulBAl8WqhJelTaXoyop4ev12qYvs1-NdIa7kSuepPTb-NQGwhpB9nmk9NrU-9DStt2Yul6pSK_t1rqTyoJsU1YxW7zJWYkN79B739E2zPqfo6jE9WTNxM81mH6aq6wuM';
+    
+    
+    async function refreshAccessToken() {
+      const url = 'https://services.leadconnectorhq.com/oauth/token';
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Accept: 'application/json'
+        },
+        body: new URLSearchParams({
+          client_id: '68a4b320048b573b06efa340-meitha6v',
+          client_secret: '883e200b-ff47-4361-9be1-635f54158e93',
+         grant_type: 'authorization_code',
+    code: '0a5b981240b17d7b0fd2f880e52bf8a57ac71148',
+    refresh_token: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2NDg2ODk1Ljc3NywiZXhwIjoxNzg4MDIyODk1Ljc3NywidW5pcXVlSWQiOiI1ZTE0ZmQxOS0zNDkyLTRkOWMtYWIxYi0wNjUwMzA2NGJhNDUiLCJ2IjoiMiJ9.ecnUxIaLYPEFAHXQyGggLlFqgmG2xtB4ByQjL0QJ3bLiERh_cmWr2UF_2Jf2_phHvFeBrcdqPGzzjcNz7HpIWTaDVXInFbLxrEISHV0JoZlAu9W7gxMwZf7V8K6VfxfMUMp1mwc1hA3aG7GnnhprtBqBdSMi8ZaEFw95VQjeTZxNX7PCcGQP-a-eCtqG0pVgQdeg2FTrpzfX9ATOktzGpYX6YMRxFiKvdfMyoyqR545o-qk-k54wGE3HmYy-UChF7moreOdzec6ffN_ypQR0_CkUoXtT6VrJ2KG-y9a6v3PWKLCup_yPOBFbmYFJfQ6EJT88BxkrD6wR9-IXtzuZK5kHUpLNdegLUMevNpEA1FTji0JqgMA0nbV3020o77AFzl_OsikMJann_f0w_7xzMwI2K_7t67ObTzGLu1HKOFSGtlSvjf-p9I4MOqK7fkZeVDGUMZIZPsIVPtkWm4wkG8KXxJfI1xqwEhSaQ-FGmWt3H9w5Y3rjuyFU0s1-7oKEyf8deh6Mu8UYslt6AV0V-WCxyQ0pp3L5N5DY1xmOeRVGZduEvg8G5arokGeY0TfBvu6PH4fQBGCu-5WVTDMeigqBfzufSSyL6HYQUoc5Jp731koZRiFmUye21JGPajkLy3GEoofmCQKRBoACjJ-IIdXe07AiP4F5xkmeKo020SI',
+          user_type: 'Location',
+          redirect_uri: 'http://localhost:3000/oauth/callback'
+        })
+      };
+
+      try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        if (!response.ok) {
+          console.error('OAuth API Response:', data);
+          throw new Error(data.message || `Failed to refresh access token (Status: ${response.status})`);
+        }
+        accessToken = data.access_token; // Update the access token
+        return data.access_token;
+      } catch (error) {
+        console.error('Error refreshing access token:', error);
+        throw error;
+      }
+    }
+
+    async function uploadToGHLMedia(pdfBlob, fileName, locationId) {
+      const url = 'https://services.leadconnectorhq.com/medias/upload-file';
+      const formData = new FormData();
+      formData.append('file', pdfBlob, fileName);
+      formData.append('locationId', locationId);
+
+      const options = {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: 'application/json'
+        },
+        body: formData
+      };
+
+      try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        if (!response.ok) {
+          if (response.status === 401) {
+            // Token expired or invalid, try refreshing
+            const newAccessToken = await refreshAccessToken();
+            options.headers.Authorization = `Bearer ${newAccessToken}`;
+            const retryResponse = await fetch(url, options);
+            const retryData = await retryResponse.json();
+            if (!retryResponse.ok) {
+              console.error('GHL Upload Retry Response:', retryData);
+              throw new Error(retryData.message || `Failed to upload ${fileName} after retry (Status: ${retryResponse.status})`);
+            }
+            return retryData;
+          }
+          console.error('GHL Upload Response:', data);
+          throw new Error(data.message || `Failed to upload ${fileName} (Status: ${response.status})`);
+        }
+        return data;
+      } catch (error) {
+        console.error(`Error uploading ${fileName} to GHL:`, error);
+        throw error;
+      }
+    }
+
+    async function splitAndUploadPDF() {
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const clientId = document.getElementById('clientId').value.trim();
+      const locationId = document.getElementById('locationId').value.trim();
+      const pdfFileInput = document.getElementById('pdfFile');
+      const pdfLinksContainer = document.getElementById('pdfLinks');
+      const uploadStatus = document.getElementById('uploadStatus');
+
+      // Clear previous links and URLs
+      pdfLinksContainer.innerHTML = '';
+      uploadStatus.innerHTML = '';
+      pdfUrls.forEach(url => URL.revokeObjectURL(url));
+      pdfUrls = [];
+
+      // Validate inputs
+      if (!firstName || !lastName || !clientId || !locationId) {
+        alert('Please fill in all fields (First Name, Last Name, Client ID, Location ID).');
+        return;
+      }
+      if (!pdfFileInput.files || pdfFileInput.files.length === 0) {
+        alert('Please upload a PDF file.');
+        return;
+      }
+
+      try {
+        // Read the uploaded PDF file
+        const file = pdfFileInput.files[0];
+        const arrayBuffer = await file.arrayBuffer();
+        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+
+        // Get the number of pages
+        const pageCount = pdfDoc.getPageCount();
+
+        if (pageCount === 0) {
+          alert('The uploaded PDF is empty.');
+          return;
+        }
+
+        uploadStatus.innerHTML = 'Splitting PDF and generating links...';
+
+        // Process each page
+        for (let i = 0; i < pageCount; i++) {
+          // Create a new PDF document for each page
+          const newDoc = await PDFLib.PDFDocument.create();
+          const [page] = await newDoc.copyPages(pdfDoc, [i]);
+          newDoc.addPage(page);
+
+          // Create header using jsPDF
+          const tempDoc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+          });
+          tempDoc.setFont('Helvetica', 'bold');
+          tempDoc.setFontSize(16);
+          const heading = `${firstName} ${lastName} - Client ID: ${clientId} -${i + 1}`;
+          tempDoc.text(heading, 10, 10);
+
+          // Save header as PDF
+          const headerPdfBytes = tempDoc.output('arraybuffer');
+          const headerDoc = await PDFLib.PDFDocument.load(headerPdfBytes);
+          const [headerPage] = await newDoc.copyPages(headerDoc, [0]);
+
+          // Insert header page
+          newDoc.insertPage(0, headerPage);
+
+          // Save the combined PDF
+          const pdfBytes = await newDoc.save();
+          const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+          const pdfUrl = URL.createObjectURL(pdfBlob);
+          pdfUrls.push(pdfUrl);
+
+          // Create download link
+          const fileName = `${firstName}_${lastName}_${clientId}_Page${i + 1}.pdf`;
+          const link = document.createElement('a');
+          link.href = pdfUrl;
+          link.download = fileName;
+          link.textContent = `Download ${fileName}`;
+          pdfLinksContainer.appendChild(link);
+
+          // Upload to GHL
+          uploadStatus.innerHTML = `Uploading ${fileName} to GHL...`;
+          await uploadToGHLMedia(pdfBlob, fileName, locationId);
+          uploadStatus.innerHTML += `<br>Uploaded ${fileName} to GHL Media Library.`;
+        }
+
+        alert(`Generated and uploaded ${pageCount} PDF(s) successfully! Click the links below to download.`);
+        uploadStatus.innerHTML += `<br>All ${pageCount} PDFs uploaded to GHL Media Library.`;
+      } catch (error) {
+        uploadStatus.className = 'error';
+        uploadStatus.innerHTML = `Error: ${error.message}`;
+        alert(`An error occurred: ${error.message}`);
+      }
+    }
+
+    // Clean up URLs on page unload
+    window.addEventListener('unload', () => {
+      pdfUrls.forEach(url => URL.revokeObjectURL(url));
+    });
+  </script>
+</body>
+</html>
