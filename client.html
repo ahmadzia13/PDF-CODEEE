@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client PDFs - GHL Media Library</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'></svg>">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    h1 {
+      margin: 0;
+    }
+    .back-link {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .back-link:hover {
+      background-color: #0056b3;
+    }
+    .pdf-list {
+      margin-top: 20px;
+    }
+    .pdf-item {
+      padding: 15px;
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+    .pdf-item h3 {
+      margin-top: 0;
+    }
+    .pdf-item a {
+      display: inline-block;
+      margin-right: 15px;
+      color: #007bff;
+      text-decoration: none;
+    }
+    .pdf-item a:hover {
+      text-decoration: underline;
+    }
+    .no-pdfs {
+      text-align: center;
+      color: #666;
+      font-style: italic;
+      padding: 40px;
+    }
+    #status {
+      margin-top: 20px;
+      color: green;
+    }
+    #status.error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Client PDFs</h1>
+    <a href="index.html" class="back-link">Back to Generator</a>
+  </div>
+  <div id="clientInfo"></div>
+  <div id="pdfList" class="pdf-list">
+    <div class="no-pdfs">Loading PDFs...</div>
+  </div>
+  <div id="status"></div>
+
+  <script>
+    // Get contact ID from URL
+    console.log('Window location:', window.location);
+    console.log('Window search:', window.location.search);
+    console.log('Window pathname:', window.location.pathname);
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const contactIdFromQuery = urlParams.get('clientId');
+    const contactIdFromPath = window.location.pathname.split('/').pop();
+    
+    console.log('Contact ID from query:', contactIdFromQuery);
+    console.log('Contact ID from path:', contactIdFromPath);
+    
+    const contactId = contactIdFromQuery || contactIdFromPath;
+    
+    if (contactId) {
+      document.getElementById('clientInfo').innerHTML = `<h2>PDFs for Contact ID: ${contactId}</h2>`;
+      loadClientPDFs(contactId);
+    } else {
+      document.getElementById('pdfList').innerHTML = '<div class="no-pdfs">No contact ID specified.</div>';
+    }
+    
+    async function loadClientPDFs(contactId) {
+      const pdfList = document.getElementById('pdfList');
+      const status = document.getElementById('status');
+      
+      try {
+        // Fetch PDF data from API
+        const url = `https://services.leadconnectorhq.com/medias/files?limit=50&sortBy=createdAt&sortOrder=desc&type=file&query=${contactId}&altType=location&altId=qQoaeHK8TVVJCWXTtNWN`;
+        const options = {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSIsImNvbnRhY3RzLnJlYWRvbmx5IiwiY29udGFjdHMud3JpdGUiXSwiY2xpZW50IjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwIiwidmVyc2lvbklkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwIiwiY2xpZW50S2V5IjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2In0sImlhdCI6MTc1NjQ5MzMwOC41MTcsImV4cCI6MTc1NjU3OTcwOC41MTd9.SbgkpxDLlOYgFTp5rnMfi2d-wKWtSZnZZOeAVTehkMnDmNReQA_-E92RKT57NSFBMVqrPumfN1kk8tRmswWiMQCkyxrIwHTnV7HtD32iW6-tc0_49FO30TjDH60mB8amkTVlf3ByVjBtCk9x4vr9CfRORzsrsRgGbXrOU5520d5KhuvN1enzRD1DVg_oKW51qcwm-X3aePc_2QAHcWSWI8GEndQH7gKSR00mrrG5KfvyBafzGIz8Y-jFr5C-ttLO61nD6kDuWAjlk-ewPDlPxq2ytZmGMLIMirnr1ywudTjUeM0bSCQNAqd7RYNChdRceMLQNhu0xsaPt5Kz-v5f4YyrOhnpmIGlC1XQYTo0xGcnqDPWAR-wvHuslIzEyyUUUJqGtkhrJmPhs-37dFG4hXXhCskdZSqBVQnhdQVxA6sEQCTJ0lXK0uTbTE6qUoa2hGOHcCMjt667SkKyLJMcaP-kfXznEsYik81CbSF5oPYvCt3uP14-MdhfkPe9U6E222PUtQ-9APRrcMuEn2KvIRE3UbNN0yYkMfJ8q94z5eZ4AaZINpI8XfF8BN6mMgMDRc9tlvSYcLRwixRYRoPhjwVyVNsbQdslwE26LrZ-TJ_t3_ziwTmp4K6DUoyZshGlASRa4s_mLLRtioZDaFb6cSDbebRkKd5sulJxlDJsJ_U',
+            Version: '2021-07-28',
+            Accept: 'application/json'
+          }
+        };
+
+        const response = await fetch(url, options);
+        const data = await response.json();
+        console.log('API Response:', data);
+        
+        // Check if the response has the expected structure
+        if (!data || !Array.isArray(data.files) || data.files.length === 0) {
+          pdfList.innerHTML = '<div class="no-pdfs">No PDFs found for this contact.</div>';
+          return;
+        }
+        
+        // Filter out any empty or invalid files
+        const validFiles = data.files.filter(file => {
+          // Log each file for debugging
+          console.log('Processing file:', file);
+          
+          // Check if file has required properties and is not empty
+          const hasName = (file.filename || file.name) && (file.filename || file.name).trim() !== '';
+          const hasUrl = (file.url || file.downloadUrl) && (file.url || file.downloadUrl).trim() !== '';
+          const isPdf = hasName && (file.filename || file.name).toLowerCase().includes('.pdf');
+          // Check if file has a size property that indicates it's not empty
+          const hasSize = file.size && file.size > 0;
+          
+          console.log('File validation - hasName:', hasName, 'hasUrl:', hasUrl, 'isPdf:', isPdf, 'hasSize:', hasSize);
+          
+          // A valid file should have a name, URL, be a PDF, and optionally have a size
+          return file && hasName && hasUrl && isPdf;
+        });
+        
+        console.log('Valid files:', validFiles);
+        
+        if (validFiles.length === 0) {
+          pdfList.innerHTML = '<div class="no-pdfs">No valid PDFs found for this contact.</div>';
+          return;
+        }
+        
+        // Generate HTML for PDF list
+        let html = '';
+        validFiles.forEach((file, index) => {
+          // Extract name from filename if possible, otherwise use generic name
+          // Add safety checks for undefined properties
+          const filename = file.filename || file.name || 'Unknown File';
+          
+          // Better name extraction logic
+          let namePart = 'Document';
+          if (filename.includes('_')) {
+            // Try to extract name more intelligently
+            const fileNameParts = filename.split('_');
+            // If we have multiple parts and the last part contains "Page",
+            // use the first parts as the name
+            if (fileNameParts.length >= 3 && fileNameParts[fileNameParts.length - 2].toLowerCase() === 'page') {
+              namePart = fileNameParts.slice(0, fileNameParts.length - 2).join(' ');
+            } else if (fileNameParts.length > 1) {
+              // Otherwise, use all parts except the last as the name
+              namePart = fileNameParts.slice(0, fileNameParts.length - 1).join(' ');
+            } else {
+              namePart = fileNameParts[0].replace('.pdf', '');
+            }
+          } else {
+            // If no underscores, just remove .pdf extension
+            namePart = filename.replace('.pdf', '');
+          }
+          
+          // Use file properties with fallbacks
+          const displayName = file.filename || file.name || 'Unknown File';
+          const createdAt = file.createdAt || file.createdTime || new Date().toISOString();
+          const fileUrl = file.url || file.downloadUrl || '#';
+          
+          html += `
+            <div class="pdf-item">
+              <h3>${namePart} - ${displayName}</h3>
+              <p>Created: ${new Date(createdAt).toLocaleString()}</p>
+              <a href="${fileUrl}" download="${displayName}">Download PDF</a>
+              <a href="${fileUrl}" target="_blank">View PDF</a>
+            </div>
+          `;
+        });
+        
+        pdfList.innerHTML = html;
+        status.innerHTML = `Loaded ${validFiles.length} PDF(s) for Contact ID: ${contactId}`;
+      } catch (error) {
+        console.error('Error loading contact PDFs:', error);
+        pdfList.innerHTML = '<div class="no-pdfs">Error loading PDFs.</div>';
+        status.className = 'error';
+        status.innerHTML = `Error: ${error.message}`;
+      }
+    }
+  </script>
+</body>
+</html>

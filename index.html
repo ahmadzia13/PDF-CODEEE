@@ -67,12 +67,8 @@
     <input type="text" id="lastName" placeholder="Enter last name">
   </div>
   <div class="form-group">
-    <label for="clientId">Client ID:</label>
-    <input type="text" id="clientId" placeholder="Enter client ID">
-  </div>
-  <div class="form-group">
-    <label for="locationId">GHL Location ID:</label>
-    <input type="text" id="locationId" value="qQoaeHK8TVVJCWXTtNWN" placeholder="Enter GHL Location ID">
+    <label for="clientId">Contact ID:</label>
+    <input type="text" id="clientId" placeholder="Enter contact ID">
   </div>
   <div class="form-group">
     <label for="pdfFile">Upload PDF:</label>
@@ -86,7 +82,7 @@
     let pdfUrls = [];
     const accessToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSIsImNvbnRhY3RzLnJlYWRvbmx5IiwiY29udGFjdHMud3JpdGUiXSwiY2xpZW50IjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwIiwidmVyc2lvbklkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwIiwiY2xpZW50S2V5IjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2In0sImlhdCI6MTc1NjQ5MzMwOC41MTcsImV4cCI6MTc1NjU3OTcwOC41MTd9.SbgkpxDLlOYgFTp5rnMfi2d-wKWtSZnZZOeAVTehkMnDmNReQA_-E92RKT57NSFBMVqrPumfN1kk8tRmswWiMQCkyxrIwHTnV7HtD32iW6-tc0_49FO30TjDH60mB8amkTVlf3ByVjBtCk9x4vr9CfRORzsrsRgGbXrOU5520d5KhuvN1enzRD1DVg_oKW51qcwm-X3aePc_2QAHcWSWI8GEndQH7gKSR00mrrG5KfvyBafzGIz8Y-jFr5C-ttLO61nD6kDuWAjlk-ewPDlPxq2ytZmGMLIMirnr1ywudTjUeM0bSCQNAqd7RYNChdRceMLQNhu0xsaPt5Kz-v5f4YyrOhnpmIGlC1XQYTo0xGcnqDPWAR-wvHuslIzEyyUUUJqGtkhrJmPhs-37dFG4hXXhCskdZSqBVQnhdQVxA6sEQCTJ0lXK0uTbTE6qUoa2hGOHcCMjt667SkKyLJMcaP-kfXznEsYik81CbSF5oPYvCt3uP14-MdhfkPe9U6E222PUtQ-9APRrcMuEn2KvIRE3UbNN0yYkMfJ8q94z5eZ4AaZINpI8XfF8BN6mMgMDRc9tlvSYcLRwixRYRoPhjwVyVNsbQdslwE26LrZ-TJ_t3_ziwTmp4K6DUoyZshGlASRa4s_mLLRtioZDaFb6cSDbebRkKd5sulJxlDJsJ_U';
 
-    async function uploadToGHLMedia(pdfBlob, fileName, locationId) {
+    async function uploadToGHLMedia(pdfBlob, fileName) {
       const url = 'https://services.leadconnectorhq.com/medias/upload-file';
       const form = new FormData();
       form.append('file', pdfBlob, fileName);
@@ -142,7 +138,6 @@
       const firstName = document.getElementById('firstName').value.trim();
       const lastName = document.getElementById('lastName').value.trim();
       const clientId = document.getElementById('clientId').value.trim();
-      const locationId = document.getElementById('locationId').value.trim();
       const pdfFileInput = document.getElementById('pdfFile');
       const pdfLinksContainer = document.getElementById('pdfLinks');
       const uploadStatus = document.getElementById('uploadStatus');
@@ -152,8 +147,8 @@
       pdfUrls.forEach(url => URL.revokeObjectURL(url));
       pdfUrls = [];
 
-      if (!firstName || !lastName || !clientId || !locationId) {
-        alert('Please fill in all fields (First Name, Last Name, Client ID, Location ID).');
+      if (!firstName || !lastName || !clientId) {
+        alert('Please fill in all fields (First Name, Last Name, Contact ID).');
         return;
       }
 
@@ -209,12 +204,15 @@
           pdfLinksContainer.appendChild(link);
 
           uploadStatus.innerHTML = `Uploading ${fileName} to GHL...`;
-          await uploadToGHLMedia(pdfBlob, fileName, locationId);
+          await uploadToGHLMedia(pdfBlob, fileName);
           uploadStatus.innerHTML += `<br>Uploaded ${fileName} to GHL Media Library.`;
         }
 
         alert(`Generated and uploaded ${pageCount} PDF(s) successfully! Click the links below to download.`);
         uploadStatus.innerHTML += `<br>All ${pageCount} PDFs uploaded to GHL Media Library.`;
+        
+        // Store PDF information in localStorage
+        storeClientPDFs(clientId, firstName, lastName, pdfUrls);
       } catch (error) {
         uploadStatus.className = 'error';
         uploadStatus.innerHTML = `Error: ${error.message}`;
@@ -223,6 +221,39 @@
           console.error('Error stack trace:', error.stack);
         }
         alert(`An error occurred: ${error.message}`);
+      }
+    }
+
+    function storeClientPDFs(clientId, firstName, lastName, pdfUrls) {
+      try {
+        // Get existing data from localStorage
+        const storedData = localStorage.getItem('generatedPdfs');
+        const allPdfs = storedData ? JSON.parse(storedData) : {};
+        
+        // Initialize array for this client if it doesn't exist
+        if (!allPdfs[clientId]) {
+          allPdfs[clientId] = [];
+        }
+        
+        // Add new PDFs to the client's list
+        const timestamp = new Date().toISOString();
+        pdfUrls.forEach((url, index) => {
+          const fileName = `${firstName}_${lastName}_${clientId}_Page${index + 1}.pdf`;
+          allPdfs[clientId].push({
+            firstName,
+            lastName,
+            clientId,
+            fileName,
+            url,
+            timestamp
+          });
+        });
+        
+        // Save updated data to localStorage
+        localStorage.setItem('generatedPdfs', JSON.stringify(allPdfs));
+        console.log(`Stored ${pdfUrls.length} PDF(s) for client ${clientId}`);
+      } catch (error) {
+        console.error('Error storing PDF information:', error);
       }
     }
 
