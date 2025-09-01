@@ -187,7 +187,7 @@
 
   <script>
     let pdfUrls = [];
-    const accessToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSIsImNvbnRhY3RzLnJlYWRvbmx5IiwiY29udGFjdHMud3JpdGUiXSwiY2xpZW50IjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwIiwidmVyc2lvbklkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwIiwiY2xpZW50S2V5IjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2In0sImlhdCI6MTc1NjQ5MzMwOC41MTcsImV4cCI6MTc1NjU3OTcwOC41MTd9.SbgkpxDLlOYgFTp5rnMfi2d-wKWtSZnZZOeAVTehkMnDmNReQA_-E92RKT57NSFBMVqrPumfN1kk8tRmswWiMQCkyxrIwHTnV7HtD32iW6-tc0_49FO30TjDH60mB8amkTVlf3ByVjBtCk9x4vr9CfRORzsrsRgGbXrOU5520d5KhuvN1enzRD1DVg_oKW51qcwm-X3aePc_2QAHcWSWI8GEndQH7gKSR00mrrG5KfvyBafzGIz8Y-jFr5C-ttLO61nD6kDuWAjlk-ewPDlPxq2ytZmGMLIMirnr1ywudTjUeM0bSCQNAqd7RYNChdRceMLQNhu0xsaPt5Kz-v5f4YyrOhnpmIGlC1XQYTo0xGcnqDPWAR-wvHuslIzEyyUUUJqGtkhrJmPhs-37dFG4hXXhCskdZSqBVQnhdQVxA6sEQCTJ0lXK0uTbTE6qUoa2hGOHcCMjt667SkKyLJMcaP-kfXznEsYik81CbSF5oPYvCt3uP14-MdhfkPe9U6E222PUtQ-9APRrcMuEn2KvIRE3UbNN0yYkMfJ8q94z5eZ4AaZINpI8XfF8BN6mMgMDRc9tlvSYcLRwixRYRoPhjwVyVNsbQdslwE26LrZ-TJ_t3_ziwTmp4K6DUoyZshGlASRa4s_mLLRtioZDaFb6cSDbebRkKd5sulJxlDJsJ_U';
+    const accessToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2NzQxOTg4LjQ3MiwiZXhwIjoxNzU2ODI4Mzg4LjQ3Mn0.SHZ7Aif9GVfBbtvg6eojvg0AFlIOX5m1hHSKDTa6OqLWc5-MqJHZEVvdzZJ-6B3vhKLX4lBHVPn5mbjzShu_n06JLb2iAYp_DHEJHAYv9bYnMvawAkPep1DHqzpzUS_Eb5hsgeWlOC821Teh8MVRkdFvbH-jhpRvidssh81mXofZWJkeGZ_1MixTijtN3lVYHzLw5IJrWTLqLpVS4d94Yr01MWig1p5ZcaQHtA8P_XWLNMB3h7i-Z8iaqH7z2v0l9PZLRWWdgOdTP3jGTOx_xbmc34JmDHG9uF4WQOtXlkXB-wlOQmTIn4f0ZYSdiK_B3YHWDo00EPVe5hZKZD84pcYBUiGiPatdnwCmL08ZZvatKW2h8VBciy54kKO1y1AjeXKMD8GFLAgBwur2DWns52fDea8qB0krxH-I7fo5Lz30U-7JTrnrz0eBPcnJnW-v2B1zAIrs5C55cgnH-aA-EDbzK28aXmoredS4i3H1DTviUoLZeqLIyczMcU0Sv13bGmPfd-0ZJRI_wDEHcUUwMzkkCg5sEmd0hk0ts84PO-PsTSZsBH_Uml7bg9V2GJC4TZZ2TjNkVBNWPcGlLlYQvvny1cA47UzRhxgwzvi0nq-uRoAUgCQacZ9m0Nsgnmw4yy89IHj1Vo2ND3CEtlkwSKCUxyP7WYLB9BxD4qAOpic';
 
     async function uploadToGHLMedia(pdfBlob, fileName) {
       const url = 'https://services.leadconnectorhq.com/medias/upload-file';
@@ -241,95 +241,88 @@
       }
     }
 
-    async function splitAndUploadPDF() {
-      const firstName = document.getElementById('firstName').value.trim();
-      const lastName = document.getElementById('lastName').value.trim();
-      const clientId = document.getElementById('clientId').value.trim();
-      const pdfFileInput = document.getElementById('pdfFile');
-      const pdfLinksContainer = document.getElementById('pdfLinks');
-      const uploadStatus = document.getElementById('uploadStatus');
+   async function splitAndUploadPDF() {
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const clientId = document.getElementById('clientId').value.trim();
+  const pdfFileInput = document.getElementById('pdfFile');
+  const pdfLinksContainer = document.getElementById('pdfLinks');
+  const uploadStatus = document.getElementById('uploadStatus');
 
-      pdfLinksContainer.innerHTML = '';
-      uploadStatus.innerHTML = '';
-      pdfUrls.forEach(url => URL.revokeObjectURL(url));
-      pdfUrls = [];
+  pdfLinksContainer.innerHTML = '';
+  uploadStatus.innerHTML = '';
+  pdfUrls.forEach(url => URL.revokeObjectURL(url));
+  pdfUrls = [];
 
-      if (!firstName || !lastName || !clientId) {
-        alert('Please fill in all fields (First Name, Last Name, Contact ID).');
-        return;
-      }
+  if (!firstName || !lastName || !clientId) {
+    alert('Please fill in all fields (First Name, Last Name, Contact ID).');
+    return;
+  }
 
-      if (!pdfFileInput.files || pdfFileInput.files.length === 0) {
-        alert('Please upload a PDF file.');
-        return;
-      }
+  if (!pdfFileInput.files || pdfFileInput.files.length === 0) {
+    alert('Please upload a PDF file.');
+    return;
+  }
 
-      try {
-        const file = pdfFileInput.files[0];
-        const arrayBuffer = await file.arrayBuffer();
+  try {
+    const file = pdfFileInput.files[0];
+    const arrayBuffer = await file.arrayBuffer();
 
-        // Validate PDF and log first 10 bytes for debugging
-        const firstBytes = new Uint8Array(arrayBuffer.slice(0, 10));
-        const pdfSignature = new TextDecoder().decode(firstBytes);
-        console.log('First 10 bytes of uploaded file:', pdfSignature, firstBytes);
-        if (!pdfSignature.startsWith('%PDF-')) {
-          throw new Error('Uploaded file is not a valid PDF (missing PDF header). First 10 bytes: ' + pdfSignature);
-        }
-
-        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-        const pageCount = pdfDoc.getPageCount();
-
-        if (pageCount === 0) {
-          alert('The uploaded PDF is empty.');
-          return;
-        }
-
-        uploadStatus.innerHTML = 'Splitting PDF and generating links...';
-
-        for (let i = 0; i < pageCount; i++) {
-          const newDoc = await PDFLib.PDFDocument.create();
-          const [page] = await newDoc.copyPages(pdfDoc, [i]);
-          newDoc.addPage(page);
-
-          // Create blank header page
-          const headerDoc = await PDFLib.PDFDocument.create();
-          const headerPage = headerDoc.addPage([595, 842]); // A4 size in points
-
-          const [headerPageCopy] = await newDoc.copyPages(headerDoc, [0]);
-          newDoc.insertPage(0, headerPageCopy);
-
-          const pdfBytes = await newDoc.save();
-          const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
-          const pdfUrl = URL.createObjectURL(pdfBlob);
-          pdfUrls.push(pdfUrl);
-
-          const fileName = `${firstName}_${lastName}_${clientId}_Page${i + 1}.pdf`;
-          const link = document.createElement('a');
-          link.href = pdfUrl;
-          link.download = fileName;
-          link.textContent = `${firstName} ${lastName} ${clientId} Page ${i + 1}`;
-          pdfLinksContainer.appendChild(link);
-
-          uploadStatus.innerHTML = `Uploading ${fileName} to GHL...`;
-          await uploadToGHLMedia(pdfBlob, fileName);
-          uploadStatus.innerHTML += `<br>Uploaded ${fileName} to GHL Media Library.`;
-        }
-
-        alert(`Generated and uploaded ${pageCount} PDF(s) successfully! Click the links below to download.`);
-        uploadStatus.innerHTML += `<br>All ${pageCount} PDFs uploaded to GHL Media Library.`;
-        
-        // Store PDF information in localStorage
-        storeClientPDFs(clientId, firstName, lastName, pdfUrls);
-      } catch (error) {
-        uploadStatus.className = 'error';
-        uploadStatus.innerHTML = `Error: ${error.message}`;
-        console.error('Full error details:', error);
-        if (error.stack) {
-          console.error('Error stack trace:', error.stack);
-        }
-        alert(`An error occurred: ${error.message}`);
-      }
+    // Validate PDF and log first 10 bytes for debugging
+    const firstBytes = new Uint8Array(arrayBuffer.slice(0, 10));
+    const pdfSignature = new TextDecoder().decode(firstBytes);
+    console.log('First 10 bytes of uploaded file:', pdfSignature, firstBytes);
+    if (!pdfSignature.startsWith('%PDF-')) {
+      throw new Error('Uploaded file is not a valid PDF (missing PDF header). First 10 bytes: ' + pdfSignature);
     }
+
+    const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+    const pageCount = pdfDoc.getPageCount();
+
+    if (pageCount === 0) {
+      alert('The uploaded PDF is empty.');
+      return;
+    }
+
+    uploadStatus.innerHTML = 'Splitting PDF and generating links...';
+
+    for (let i = 0; i < pageCount; i++) {
+      const newDoc = await PDFLib.PDFDocument.create();
+      const [page] = await newDoc.copyPages(pdfDoc, [i]);
+      newDoc.addPage(page);
+
+      const pdfBytes = await newDoc.save();
+      const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      pdfUrls.push(pdfUrl);
+
+      const fileName = `${firstName}_${lastName}_${clientId}_Page${i + 1}.pdf`;
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = fileName;
+      link.textContent = `${firstName} ${lastName} ${clientId} Page ${i + 1}`;
+      pdfLinksContainer.appendChild(link);
+
+      uploadStatus.innerHTML = `Uploading ${fileName} to GHL...`;
+      await uploadToGHLMedia(pdfBlob, fileName);
+      uploadStatus.innerHTML += `<br>Uploaded ${fileName} to GHL Media Library.`;
+    }
+
+    alert(`Generated and uploaded ${pageCount} PDF(s) successfully! Click the links below to download.`);
+    uploadStatus.innerHTML += `<br>All ${pageCount} PDFs uploaded to GHL Media Library.`;
+
+    // Store PDF information in localStorage
+    storeClientPDFs(clientId, firstName, lastName, pdfUrls);
+  } catch (error) {
+    uploadStatus.className = 'error';
+    uploadStatus.innerHTML = `Error: ${error.message}`;
+    console.error('Full error details:', error);
+    if (error.stack) {
+      console.error('Error stack trace:', error.stack);
+    }
+    alert(`An error occurred: ${error.message}`);
+  }
+}
 
     function storeClientPDFs(clientId, firstName, lastName, pdfUrls) {
       try {
