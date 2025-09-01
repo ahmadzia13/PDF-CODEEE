@@ -5,78 +5,218 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Client PDFs - GHL Media Library</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
+      padding: 20px 0;
+      border-bottom: 1px solid #e9ecef;
     }
+    
     h1 {
+      font-weight: 700;
+      font-size: 28px;
+      color: #212529;
       margin: 0;
     }
+    
+    h2 {
+      font-weight: 600;
+      font-size: 22px;
+      color: #495057;
+      margin-bottom: 25px;
+    }
+    
     .back-link {
-      padding: 10px 20px;
-      background-color: #007bff;
+      padding: 12px 24px;
+      background-color: #0d6efd;
       color: white;
       text-decoration: none;
-      border-radius: 4px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
+    
     .back-link:hover {
-      background-color: #0056b3;
+      background-color: #0b5ed7;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+    
+    .back-link:active {
+      transform: translateY(0);
+    }
+    
     .pdf-list {
       margin-top: 20px;
     }
-    .pdf-item {
-      padding: 15px;
-      border: 1px solid #ddd;
-      margin-bottom: 10px;
-      border-radius: 4px;
+    
+    .pdf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 24px;
     }
+    
+    .pdf-item {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      border: 1px solid #e9ecef;
+    }
+    
+    .pdf-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+      border-color: #dee2e6;
+    }
+    
     .pdf-item h3 {
       margin-top: 0;
+      margin-bottom: 12px;
+      font-weight: 600;
+      font-size: 18px;
+      color: #212529;
     }
-    .pdf-item a {
-      display: inline-block;
-      margin-right: 15px;
-      color: #007bff;
+    
+    .pdf-meta {
+      color: #6c757d;
+      font-size: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .pdf-actions {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .pdf-action {
+      padding: 10px 16px;
+      background-color: #f8f9fa;
+      color: #0d6efd;
       text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      border: 1px solid #e9ecef;
+      flex: 1;
+      text-align: center;
     }
-    .pdf-item a:hover {
-      text-decoration: underline;
+    
+    .pdf-action:hover {
+      background-color: #0d6efd;
+      color: white;
+      border-color: #0d6efd;
     }
+    
+    .pdf-delete {
+      background-color: #fff5f5;
+      color: #dc3545;
+      border-color: #f5c6cb;
+    }
+    
+    .pdf-delete:hover {
+      background-color: #dc3545;
+      color: white;
+      border-color: #dc3545;
+    }
+    
     .no-pdfs {
       text-align: center;
-      color: #666;
-      font-style: italic;
-      padding: 40px;
+      color: #6c757d;
+      padding: 60px 20px;
+      grid-column: 1 / -1;
     }
+    
+    .no-pdfs h3 {
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: #495057;
+    }
+    
     #status {
-      margin-top: 20px;
-      color: green;
+      margin-top: 30px;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
     }
+    
     #status.error {
-      color: red;
+      background-color: #f8d7da;
+      color: #721c24;
+      border-color: #f5c6cb;
+    }
+    
+    @media (max-width: 768px) {
+      .pdf-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>Client PDFs</h1>
-    <a href="index.html" class="back-link">Back to Generator</a>
+  <div class="container">
+    <div class="header">
+      <h1>Client PDFs</h1>
+      <a href="index.html" class="back-link">← Back to Generator</a>
+    </div>
+    <div id="clientInfo"></div>
+    <div id="pdfList" class="pdf-list">
+      <div class="pdf-grid">
+        <div class="no-pdfs">
+          <h3>Loading PDFs...</h3>
+          <p>Please wait while we fetch your documents</p>
+        </div>
+      </div>
+    </div>
+    <div id="status"></div>
   </div>
-  <div id="clientInfo"></div>
-  <div id="pdfList" class="pdf-list">
-    <div class="no-pdfs">Loading PDFs...</div>
-  </div>
-  <div id="status"></div>
 
   <script>
     // Get contact ID from URL
@@ -97,7 +237,7 @@
       document.getElementById('clientInfo').innerHTML = `<h2>PDFs for Contact ID: ${contactId}</h2>`;
       loadClientPDFs(contactId);
     } else {
-      document.getElementById('pdfList').innerHTML = '<div class="no-pdfs">No contact ID specified.</div>';
+      document.getElementById('pdfList').innerHTML = '<div class="pdf-grid"><div class="no-pdfs"><h3>No Contact ID</h3><p>No contact ID was specified.</p></div></div>';
     }
     
     async function loadClientPDFs(contactId) {
@@ -122,7 +262,7 @@
         
         // Check if the response has the expected structure
         if (!data || !Array.isArray(data.files) || data.files.length === 0) {
-          pdfList.innerHTML = '<div class="no-pdfs">No PDFs found for this contact.</div>';
+          pdfList.innerHTML = '<div class="pdf-grid"><div class="no-pdfs"><h3>No PDFs Found</h3><p>No PDFs were found for this contact.</p></div></div>';
           return;
         }
         
@@ -147,7 +287,7 @@
         console.log('Valid files:', validFiles);
         
         if (validFiles.length === 0) {
-          pdfList.innerHTML = '<div class="no-pdfs">No valid PDFs found for this contact.</div>';
+          pdfList.innerHTML = '<div class="pdf-grid"><div class="no-pdfs"><h3>No Valid PDFs Found</h3><p>No valid PDFs were found for this contact.</p></div></div>';
           return;
         }
         
@@ -183,25 +323,115 @@
           const createdAt = file.createdAt || file.createdTime || new Date().toISOString();
           const fileUrl = file.url || file.downloadUrl || '#';
           
+          // Extract file ID - try multiple approaches
+          let fileId = '';
+          
+          // Try to get ID directly from file object first
+          if (file._id) {
+            fileId = file._id;
+          } else if (file.id) {
+            fileId = file.id;
+          } else if (file.fileId) {
+            fileId = file.fileId;
+          } else if (fileUrl && fileUrl.includes('/medias/')) {
+            // Extract ID from URL like: https://services.leadconnectorhq.com/medias/FILE_ID/...
+            const urlParts = fileUrl.split('/medias/');
+            if (urlParts.length > 1) {
+              const fileIdPart = urlParts[1].split('/')[0];
+              fileId = fileIdPart;
+            }
+          }
+          
           html += `
             <div class="pdf-item">
-              <h3>${namePart} - ${displayName}</h3>
-              <p>Created: ${new Date(createdAt).toLocaleString()}</p>
-              <a href="${fileUrl}" download="${displayName}">Download PDF</a>
-              <a href="${fileUrl}" target="_blank">View PDF</a>
+              <h3>${namePart}</h3>
+              <div class="pdf-meta">
+                <div>File: ${displayName}</div>
+                <div>Created: ${new Date(createdAt).toLocaleString()}</div>
+              </div>
+              <div class="pdf-actions">
+                <a href="${fileUrl}" download="${displayName}" class="pdf-action">Download</a>
+                <a href="${fileUrl}" target="_blank" class="pdf-action">View</a>
+                <button class="pdf-action pdf-delete" data-file-id="${fileId}" data-file-name="${displayName}">Delete</button>
+              </div>
             </div>
           `;
         });
-        
+
         pdfList.innerHTML = html;
         status.innerHTML = `Loaded ${validFiles.length} PDF(s) for Contact ID: ${contactId}`;
       } catch (error) {
         console.error('Error loading contact PDFs:', error);
-        pdfList.innerHTML = '<div class="no-pdfs">Error loading PDFs.</div>';
+        pdfList.innerHTML = '<div class="pdf-grid"><div class="no-pdfs"><h3>Error Loading PDFs</h3><p>There was an error loading the PDFs. Please try again later.</p></div></div>';
         status.className = 'error';
         status.innerHTML = `Error: ${error.message}`;
       }
     }
+    
+    async function deleteFile(fileId, fileName) {
+      if (!fileId) {
+        alert('File ID is missing. Cannot delete file.');
+        return;
+      }
+      
+      // Validate that fileId looks like a valid ID (not a full URL or other invalid format)
+      if (fileId.includes('http') || fileId.includes(' ')) {
+        alert('Invalid file ID format. Cannot delete file.');
+        return;
+      }
+      
+      if (!confirm(`Are you sure you want to delete ${fileName}?`)) {
+        return;
+      }
+      
+      const status = document.getElementById('status');
+      
+      try {
+        status.innerHTML = `Deleting ${fileName}...`;
+        status.className = '';
+        
+        const url = `https://services.leadconnectorhq.com/medias/${fileId}?altType=location&altId=qQoaeHK8TVVJCWXTtNWN`;
+        const options = {
+          method: 'DELETE',
+          headers: {
+            Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSIsImNvbnRhY3RzLnJlYWRvbmx5IiwiY29udGFjdHMud3JpdGUiXSwiY2xpZW50IjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwIiwidmVyc2lvbklkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwIiwiY2xpZW50S2V5IjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2In0sImlhdCI6MTc1NjQ5MzMwOC41MTcsImV4cCI6MTc1NjU3OTcwOC41MTd9.SbgkpxDLlOYgFTp5rnMfi2d-wKWtSZnZZOeAVTehkMnDmNReQA_-E92RKT57NSFBMVqrPumfN1kk8tRmswWiMQCkyxrIwHTnV7HtD32iW6-tc0_49FO30TjDH60mB8amkTVlf3ByVjBtCk9x4vr9CfRORzsrsRgGbXrOU5520d5KhuvN1enzRD1DVg_oKW51qcwm-X3aePc_2QAHcWSWI8GEndQH7gKSR00mrrG5KfvyBafzGIz8Y-jFr5C-ttLO61nD6kDuWAjlk-ewPDlPxq2ytZmGMLIMirnr1ywudTjUeM0bSCQNAqd7RYNChdRceMLQNhu0xsaPt5Kz-v5f4YyrOhnpmIGlC1XQYTo0xGcnqDPWAR-wvHuslIzEyyUUUJqGtkhrJmPhs-37dFG4hXXhCskdZSqBVQnhdQVxA6sEQCTJ0lXK0uTbTE6qUoa2hGOHcCMjt667SkKyLJMcaP-kfXznEsYik81CbSF5oPYvCt3uP14-MdhfkPe9U6E222PUtQ-9APRrcMuEn2KvIRE3UbNN0yYkMfJ8q94z5eZ4AaZINpI8XfF8BN6mMgMDRc9tlvSYcLRwixRYRoPhjwVyVNsbQdslwE26LrZ-TJ_t3_ziwTmp4K6DUoyZshGlASRa4s_mLLRtioZDaFb6cSDbebRkKd5sulJxlDJsJ_U',
+            Version: '2021-07-28'
+          }
+        };
+
+        const response = await fetch(url, options);
+        const data = await response.json();
+        
+        if (response.ok) {
+          status.innerHTML = `Successfully deleted ${fileName}`;
+          status.className = '';
+          
+          // Reload the PDF list to reflect the deletion
+          const contactId = new URLSearchParams(window.location.search).get('clientId') ||
+                           window.location.pathname.split('/').pop();
+          if (contactId) {
+            loadClientPDFs(contactId);
+          }
+        } else {
+          throw new Error(data.message || `Failed to delete ${fileName}`);
+        }
+      } catch (error) {
+        console.error('Error deleting file:', error);
+        status.innerHTML = `Error deleting ${fileName}: ${error.message}`;
+        status.className = 'error';
+      }
+    }
+    
+    // Add event listeners to delete buttons
+    document.addEventListener('click', function(e) {
+      if (e.target && e.target.classList.contains('pdf-delete')) {
+        console.log('Delete button clicked:', e.target); // Debug log
+        const fileId = e.target.getAttribute('data-file-id');
+        const fileName = e.target.getAttribute('data-file-name');
+        console.log('Delete button data:', { fileId, fileName }); // Debug log
+        deleteFile(fileId, fileName);
+      }
+    });
   </script>
 </body>
 </html>
