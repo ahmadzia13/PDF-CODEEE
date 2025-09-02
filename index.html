@@ -3,14 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDF Page Splitter with GHL Upload</title>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <title>PDF Split and Upload</title>
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+  </script>
 
   <style>
-    
-    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
     .ah-con h1 {
       font-weight: 700;
@@ -23,19 +42,15 @@
     }
 
     .ah-con .form-group {
-
       background: white;
       padding: 20px;
-    
-    
-  
     }
-    .ah-con .container{
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        
-        padding: 20px;
-        border: 1px solid #e9ecef;
-        border-radius: 12px;
+
+    .ah-con .container {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
     }
 
     .ah-con label {
@@ -47,9 +62,7 @@
 
     .ah-con input {
       width: 100%;
-     padding-bottom: 10px;
-     padding-top: 10px;
-     padding-left: 10px;
+      padding: 12px 16px;
       border: 1px solid #ced4da;
       border-radius: 8px;
       font-family: 'Inter', sans-serif;
@@ -61,6 +74,16 @@
       outline: none;
       border-color: #0d6efd;
       box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+    }
+
+    .ah-con .date-inputs {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .ah-con .date-inputs input {
+      flex: 1;
     }
 
     .ah-con button {
@@ -77,7 +100,6 @@
       display: block;
       width: 100%;
       margin: 20px 0;
-    
     }
 
     .ah-con button:hover {
@@ -92,15 +114,27 @@
 
     .ah-con #pdfLinks {
       display: none;
+      margin-top: 20px;
     }
-
 
     .ah-con #pdfLinks a {
-      display: none;
-  
+      display: block;
+      margin: 10px 0;
+      color: #0d6efd;
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      transition: all 0.2s ease;
+      border: 1px solid #e9ecef;
     }
-    
 
+    .ah-con #pdfLinks a:hover {
+      background-color: #0d6efd;
+      color: white;
+      border-color: #0d6efd;
+      transform: translateX(5px);
+    }
 
     .ah-con #uploadStatus {
       padding: 16px;
@@ -110,7 +144,8 @@
       background-color: lightgreen;
       color: #0c5460;
       border: 1px solid #bee5eb;
-      display: none; /* Hide initially */
+      display: none;
+      margin-top: 20px;
     }
 
     .ah-con #uploadStatus.error {
@@ -118,7 +153,7 @@
       color: #721c24;
       border-color: #f5c6cb;
     }
-    
+
     @media (max-width: 768px) {
       .ah-con h1 {
         font-size: 24px;
@@ -127,225 +162,361 @@
       .ah-con .form-group {
         padding: 15px;
       }
+
+      .ah-con .date-inputs {
+        flex-direction: column;
+        gap: 10px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="ah-con">
   <div class="container">
-   
-   
-    <div class="form-group">
-      <label for="pdfFile">Upload PDF:</label>
-      <input type="file" id="pdfFile" accept="application/pdf">
+    <h1>Split PDF Uploader</h1>
+    <div class="ah-con">
+      <div class="form-group">
+        <div class="date-inputs">
+          <div>
+            <label for="monthInput">Month:</label>
+            <input type="text" id="monthInput" placeholder="MM" maxlength="2">
+          </div>
+          <div>
+            <label for="yearInput">Year:</label>
+            <input type="text" id="yearInput" placeholder="YYYY" maxlength="4">
+          </div>
+        </div>
+        <label for="pdfFile">Upload PDF:</label>
+        <input type="file" id="pdfFile" accept="application/pdf">
+      </div>
+      <button id="splitBtn">Split and Upload PDFs</button>
+      <div id="pdfLinks"></div>
+      <div id="uploadStatus"></div>
     </div>
-    <button onclick="splitAndUploadPDF()">Split and Upload PDFs</button>
-    <div id="pdfLinks"></div>
-    <div id="uploadStatus"></div>
-  </div>
   </div>
 
   <script>
     let pdfUrls = [];
-    const accessToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2NzQxOTg4LjQ3MiwiZXhwIjoxNzU2ODI4Mzg4LjQ3Mn0.SHZ7Aif9GVfBbtvg6eojvg0AFlIOX5m1hHSKDTa6OqLWc5-MqJHZEVvdzZJ-6B3vhKLX4lBHVPn5mbjzShu_n06JLb2iAYp_DHEJHAYv9bYnMvawAkPep1DHqzpzUS_Eb5hsgeWlOC821Teh8MVRkdFvbH-jhpRvidssh81mXofZWJkeGZ_1MixTijtN3lVYHzLw5IJrWTLqLpVS4d94Yr01MWig1p5ZcaQHtA8P_XWLNMB3h7i-Z8iaqH7z2v0l9PZLRWWdgOdTP3jGTOx_xbmc34JmDHG9uF4WQOtXlkXB-wlOQmTIn4f0ZYSdiK_B3YHWDo00EPVe5hZKZD84pcYBUiGiPatdnwCmL08ZZvatKW2h8VBciy54kKO1y1AjeXKMD8GFLAgBwur2DWns52fDea8qB0krxH-I7fo5Lz30U-7JTrnrz0eBPcnJnW-v2B1zAIrs5C55cgnH-aA-EDbzK28aXmoredS4i3H1DTviUoLZeqLIyczMcU0Sv13bGmPfd-0ZJRI_wDEHcUUwMzkkCg5sEmd0hk0ts84PO-PsTSZsBH_Uml7bg9V2GJC4TZZ2TjNkVBNWPcGlLlYQvvny1cA47UzRhxgwzvi0nq-uRoAUgCQacZ9m0Nsgnmw4yy89IHj1Vo2ND3CEtlkwSKCUxyP7WYLB9BxD4qAOpic';
 
-    async function uploadToGHLMedia(pdfBlob, fileName) {
-      const url = 'https://services.leadconnectorhq.com/medias/upload-file';
-      const form = new FormData();
-      form.append('file', pdfBlob, fileName);
-      form.append('hosted', '');
-      form.append('fileUrl', '');
-      form.append('name', fileName);
-      form.append('parentId', '');
+    document.addEventListener('DOMContentLoaded', () => {
+      function checkLibrariesLoaded() {
+        if (typeof PDFLib !== 'undefined' && typeof pdfjsLib !== 'undefined') {
+          console.log('Libraries loaded, initializing...');
+        } else {
+          console.error('Libraries failed to load.');
+          alert('Failed to load required libraries. Please check your internet connection.');
+          return;
+        }
+      }
+      checkLibrariesLoaded();
 
-      const options = {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          Version: '2021-07-28',
-          Accept: 'application/json'
-        },
-        body: form
+      const accessToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2ODM4ODQyLjYyMiwiZXhwIjoxNzU2OTI1MjQyLjYyMn0.OqfqwO8Q7ks3iuO26hEsv9VrH2K7GlzEXbZCVoCaMJev8_jJcoQtz6roaJNi86_H206pIIU5V1CMIPpH0-t3sI_JJzKWBBPl88f9wmiimA4ZXL9Wdt7UKobnKTXUYJ0eSyNeVPqH1H7JrMfg9LpJMSxNxcqErQtzmgUOH7lA80zUfYDNjcPtEgAb2E5O_CFSCjCypd_z9TD_om4jMLUYELqZwqw8CINA0tZlMZPblbj6eI24m9pHzH_76HH_t0jkaecPuks6_9JdjdicKyp3P944PZquN5hNM82FD9D_9sDJgSBM-XPoTqgu2MZ_dNMvrFmY4vdFi1PS_RflrBSLJmFeV-NmogSh2xtV1ygIbRV5xPeb2R5SLfI-b40fDsNjZtSGEJWxEV9FTvC6ghudjOJJgEdmnoTVZ7mFU1ePhTlQobcHNoYrfjuvqQHqy450dXE-RHs3vUF_YK_UC9H4XrV9zbg25pzSQgcry5ojfeH9W2BG8FGZsdFGM-VcxOCUfinHJTutujwBRDoajPSE7L1UmrKehsEfJ8tL3o34uEfm4qDgt3qxmFInFflvKKJ8J5uVrlpOlvTFuiWEZw_h52T3jYsViRLvkU-l2ddJrWTnXo6BdZ-a48tNTEPxICzPnl-1jMhGEwwc0egL2rv4qxDW0xBYR45srA_AcqRRQcY';
+      const employeeData = {
+        '8': { name: 'John Doe', contactId: '123' },
+        '11': { name: 'Jane Smith', contactId: '456' },
+        '14': { name: 'Bob Johnson', contactId: '79' },
+        '19': { name: 'Bob Johnson', contactId: '89' },
+        '31': { name: 'Bob Johnson', contactId: '7889' },
+        '34': { name: 'Bob Johnson', contactId: '756489' },
+        '48': { name: 'Bob Johnson', contactId: '7645689' },
+        '49': { name: 'Bob Johnson', contactId: '7865469' },
+        '50': { name: 'Bob Johnson', contactId: '785649' },
+        '53': { name: 'Bob Johnson', contactId: '785463459' },
+        '57': { name: 'Bob Johnson', contactId: '783452359' },
+        '59': { name: 'Bob Johnson', contactId: '765674589' },
+        '66': { name: 'Bob Johnson', contactId: '783523453439' },
+        '68': { name: 'Bob Johnson', contactId: '78559' },
+        '69': { name: 'Bob Johnson', contactId: '72189' },
+        '72': { name: 'Bob Johnson', contactId: '71189' },
+        '74': { name: 'Bob Johnson', contactId: '11789' },
+        '76': { name: 'Bob Johnson', contactId: '22789' },
+        '77': { name: 'Bob Johnson', contactId: '33789' },
+        '81': { name: 'Bob Johnson', contactId: '33789' },
+        '87': { name: 'Bob Johnson', contactId: '44789' },
+        '88': { name: 'Bob Johnson', contactId: '55789' },
+        '90': { name: 'Bob Johnson', contactId: '66789' },
+        '91': { name: 'Bob Johnson', contactId: '667789' },
+        '92': { name: 'Bob Johnson', contactId: '6757789' },
+        '93': { name: 'Bob Johnson', contactId: '7856759' },
+        '95': { name: 'Bob Johnson', contactId: '75675689' },
+        '96': { name: 'Bob Johnson', contactId: '7567589' },
+        '97': { name: 'Bob Johnson', contactId: '567789' },
+        '101': { name: 'Bob Johnson', contactId: '567789' },
+        '102': { name: 'Bob Johnson', contactId: '5676789' },
+        '106': { name: 'Bob Johnson', contactId: '657789' },
+        '107': { name: 'Bob Johnson', contactId: '657789' },
+        '108': { name: 'Bob Johnson', contactId: '5675789' },
+        '109': { name: 'Bob Johnson', contactId: '567756789' },
+        '110': { name: 'Bob Johnson', contactId: '567789' },
+        '1': { name: 'Bob Johnson', contactId: '765789' }
       };
 
-      try {
-        console.log(`Attempting to upload ${fileName} to GHL Media Library`);
-        console.log(`Using access token: ${accessToken.substring(0, 20)}...`);
-        
-        const response = await fetch(url, options);
-        const data = await response.json();
-        console.log(`Upload response status: ${response.status}`);
-        console.log(`Upload response data:`, data);
+      function blobToBase64(blob) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      }
 
-        if (!response.ok) {
-          console.error('GHL Upload Response:', data);
-          if (response.status === 401) {
-            throw new Error('Unauthorized: Invalid or expired access token. Please update the access token in the code.');
-          } else if (response.status === 400) {
-            throw new Error(`Bad Request: ${data.message || 'Invalid request parameters'}`);
-          } else if (response.status === 403) {
-            throw new Error(`Forbidden: ${data.message || 'Access denied'}`);
-          } else if (response.status === 413) {
-            throw new Error(`Payload Too Large: ${data.message || 'File too large'}`);
+      async function uploadToGHLMedia(pdfBlob, fileName) {
+        const url = 'https://services.leadconnectorhq.com/medias/upload-file';
+        const form = new FormData();
+        form.append('file', pdfBlob, fileName);
+        form.append('hosted', '');
+        form.append('fileUrl', '');
+        form.append('name', fileName);
+        form.append('parentId', '');
+
+        const options = {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Version: '2021-07-28',
+            Accept: 'application/json'
+          },
+          body: form
+        };
+
+        try {
+          console.log(`Attempting to upload ${fileName} to GHL Media Library`);
+          console.log(`Using access token: ${accessToken.substring(0, 20)}...`);
+          
+          const response = await fetch(url, options);
+          const data = await response.json();
+          console.log(`Upload response status: ${response.status}`);
+          console.log(`Upload response data:`, data);
+
+          if (!response.ok) {
+            console.error('GHL Upload Response:', data);
+            if (response.status === 401) {
+              throw new Error('Unauthorized: Invalid or expired access token. Please update the access token in the code.');
+            } else if (response.status === 400) {
+              throw new Error(`Bad Request: ${data.message || 'Invalid request parameters'}`);
+            } else if (response.status === 403) {
+              throw new Error(`Forbidden: ${data.message || 'Access denied'}`);
+            } else if (response.status === 413) {
+              throw new Error(`Payload Too Large: ${data.message || 'File too large'}`);
+            }
+            throw new Error(data.message || `Failed to upload ${fileName} (Status: ${response.status})`);
           }
-          throw new Error(data.message || `Failed to upload ${fileName} (Status: ${response.status})`);
+          console.log(`Successfully uploaded ${fileName} to GHL Media Library`);
+          return data;
+        } catch (error) {
+          console.error(`Error uploading ${fileName} to GHL:`, error);
+          if (error instanceof TypeError && error.message.includes('fetch')) {
+            throw new Error(`Network error: Unable to connect to GHL server. Please check your internet connection. (${error.message})`);
+          }
+          throw error;
         }
-        console.log(`Successfully uploaded ${fileName} to GHL Media Library`);
-        return data;
-      } catch (error) {
-        console.error(`Error uploading ${fileName} to GHL:`, error);
-        if (error instanceof TypeError && error.message.includes('fetch')) {
-          throw new Error(`Network error: Unable to connect to GHL server. Please check your internet connection. (${error.message})`);
+      }
+
+      async function splitAndUploadPDF() {
+        const pdfFileInput = document.getElementById('pdfFile');
+        console.log('pdfFileInput:', pdfFileInput);
+        console.log('Files:', pdfFileInput.files);
+        const monthInput = document.getElementById('monthInput');
+        const yearInput = document.getElementById('yearInput');
+        const pdfLinksContainer = document.getElementById('pdfLinks');
+        const uploadStatus = document.getElementById('uploadStatus');
+
+        // Check if elements exist
+        if (!pdfLinksContainer) {
+          console.error('Error: pdfLinks element not found in DOM');
+          alert('Error: pdfLinks container not found. Please check the HTML.');
+          return;
         }
-        throw error;
-      }
-    }
-
-    async function splitAndUploadPDF() {
-      // Get parameters from URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const fullName = urlParams.get('fullName')?.trim();
-      const clientId = urlParams.get('clientId')?.trim();
-      const pdfFileInput = document.getElementById('pdfFile');
-      const pdfLinksContainer = document.getElementById('pdfLinks');
-      const uploadStatus = document.getElementById('uploadStatus');
-
-      // Check if elements exist
-      if (!pdfLinksContainer) {
-        console.error('Error: pdfLinks element not found in DOM');
-     
-        return;
-      }
-      if (!uploadStatus) {
-        console.error('Error: uploadStatus element not found in DOM');
-     
-        return;
-      }
-
-      pdfLinksContainer.innerHTML = '';
-      uploadStatus.innerHTML = '';
-      pdfUrls.forEach(url => URL.revokeObjectURL(url));
-      pdfUrls = [];
-
-      if (!fullName || !clientId) {
-        alert('Please provide fullName and clientId in the URL parameters.');
-        return;
-      }
-
-      if (!pdfFileInput.files || pdfFileInput.files.length === 0) {
-        alert('Please upload a PDF file.');
-        return;
-      }
-
-      try {
-        const file = pdfFileInput.files[0];
-        const arrayBuffer = await file.arrayBuffer();
-
-        // Validate PDF and log first 10 bytes for debugging
-        const firstBytes = new Uint8Array(arrayBuffer.slice(0, 10));
-        const pdfSignature = new TextDecoder().decode(firstBytes);
-        console.log('First 10 bytes of uploaded file:', pdfSignature, firstBytes);
-        if (!pdfSignature.startsWith('%PDF-')) {
-          throw new Error('Uploaded file is not a valid PDF (missing PDF header). First 10 bytes: ' + pdfSignature);
-        }
-
-        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-        const pageCount = pdfDoc.getPageCount();
-
-        if (pageCount === 0) {
-          alert('The uploaded PDF is empty.');
+        if (!uploadStatus) {
+          console.error('Error: uploadStatus element not found in DOM');
+          alert('Error: uploadStatus container not found. Please check the HTML.');
           return;
         }
 
-        uploadStatus.style.display = 'block'; // Show uploadStatus
-        uploadStatus.innerHTML = 'Splitting PDF and generating links...';
-        const pdfLinks = [];
+        pdfLinksContainer.innerHTML = '';
+        uploadStatus.innerHTML = '';
+        pdfUrls = [];
 
-        for (let i = 0; i < pageCount; i++) {
-          const newDoc = await PDFLib.PDFDocument.create();
-          const [page] = await newDoc.copyPages(pdfDoc, [i]);
-          newDoc.addPage(page);
-
-          const pdfBytes = await newDoc.save();
-          const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
-          const pdfUrl = URL.createObjectURL(pdfBlob);
-          pdfUrls.push(pdfUrl);
-
-          const fileName = `${fullName}_${clientId}_Page${i + 1}.pdf`;
-          pdfLinks.push({ url: pdfUrl, fileName, text: `${fullName} ${clientId} Page ${i + 1}` });
-
-          await uploadToGHLMedia(pdfBlob, fileName);
+        if (!pdfFileInput.files || pdfFileInput.files.length === 0) {
+          alert('Please upload a PDF file.');
+          return;
         }
 
-        // Populate PDF links and show containers after all uploads are complete
-        pdfLinksContainer.style.display = 'block'; // Show pdfLinks
-        pdfLinks.forEach(({ url, fileName, text }) => {
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = fileName;
-          link.textContent = text;
-          pdfLinksContainer.appendChild(link);
-        });
-
-     
-setTimeout(() => {
-  location.reload(); // Refresh the page after 3 seconds
-}, 3000);
-storeClientPDFs(clientId, fullName, pdfUrls);
-        uploadStatus.innerHTML = `Generated and uploaded ${pageCount} PDF(s) successfully!`;
-
-        // Store PDF information in localStorage
-        storeClientPDFs(clientId, fullName, pdfUrls);
-      } catch (error) {
-        uploadStatus.style.display = 'block'; // Show uploadStatus on error
-        uploadStatus.className = 'error';
-        uploadStatus.innerHTML = `Error: ${error.message}`;
-        console.error('Full error details:', error);
-        if (error.stack) {
-          console.error('Error stack trace:', error.stack);
+        const month = monthInput.value.trim();
+        const year = yearInput.value.trim();
+        if (!month || !year) {
+          alert('Please provide both month and year.');
+          return;
         }
-      
+
+        try {
+          const file = pdfFileInput.files[0];
+          if (!file || file.type !== 'application/pdf') {
+            throw new Error('No valid PDF file selected. Please upload a PDF.');
+          }
+          const arrayBuffer = await file.arrayBuffer();
+
+          // Validate PDF and log first 10 bytes for debugging
+          const firstBytes = new Uint8Array(arrayBuffer.slice(0, 10));
+          const pdfSignature = new TextDecoder().decode(firstBytes);
+          console.log('First 10 bytes of uploaded file:', pdfSignature, firstBytes);
+          if (!pdfSignature.startsWith('%PDF-')) {
+            throw new Error('Uploaded file is not a valid PDF (missing PDF header). First 10 bytes: ' + pdfSignature);
+          }
+
+          const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+          const pdfjsDoc = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+          const pageCount = pdfDoc.getPageCount();
+
+          if (pageCount === 0) {
+            alert('The uploaded PDF is empty.');
+            return;
+          }
+
+          uploadStatus.style.display = 'block'; // Show uploadStatus
+          uploadStatus.innerHTML = 'Splitting PDF and generating links...';
+          const pdfLinks = [];
+for (let i = 0; i < pageCount; i++) {
+  const pdfjsPage = await pdfjsDoc.getPage(i + 1);
+  const textContent = await pdfjsPage.getTextContent();
+  const viewport = pdfjsPage.getViewport({scale: 1});
+  const pageHeight = viewport.height;
+  let topRightEmployeeID = null;
+
+  // Debug: Log all text items in the top area
+  console.log(`Page ${i + 1} text items in top 200pt:`);
+  for (const item of textContent.items) {
+    const { str, transform } = item;
+    const x = transform[4];
+    const y = pageHeight - transform[5];
+    if (y < 200 && str.trim()) {
+      console.log(`  "${str.trim()}" at x=${x.toFixed(1)}, y=${y.toFixed(1)}`);
+    }
+  }
+
+  // Find "Cód." and "trab." in the top area
+  let codX = 0, codY = 0, trabX = 0, trabY = 0;
+  for (const item of textContent.items) {
+    const { str, transform } = item;
+    const x = transform[4];
+    const y = pageHeight - transform[5];
+
+    if (str.trim() === "Cód." && y < 200) {
+      codX = x;
+      codY = y;
+      console.log(`Found "Cód." at x=${codX}, y=${codY}`);
+    }
+    if (str.trim() === "trab." && y < 200) {
+      trabX = x;
+      trabY = y;
+      console.log(`Found "trab." at x=${trabX}, y=${trabY}`);
+    }
+  }
+
+  // If found both parts, look for the number below them
+  if (codX > 0 && trabX > 0) {
+    const labelCenterX = (codX + trabX) / 2;
+    const labelY = codY; // Use the y of "Cód."
+
+    for (const item of textContent.items) {
+      const { str, transform } = item;
+      const x = transform[4];
+      const y = pageHeight - transform[5];
+
+      if (str.trim().match(/^\d+$/) && y > labelY && y < labelY + 50 && Math.abs(x - labelCenterX) < 100) {
+        topRightEmployeeID = str.trim();
+        console.log(`Found ID "${topRightEmployeeID}" below "Cód. trab." at x=${x}, y=${y}`);
+        break;
       }
     }
+  }
 
-    function storeClientPDFs(clientId, fullName, pdfUrls) {
-      try {
-        // Get existing data from localStorage
-        const storedData = localStorage.getItem('generatedPdfs');
-        const allPdfs = storedData ? JSON.parse(storedData) : {};
-        
-        // Initialize array for this client if it doesn't exist
-        if (!allPdfs[clientId]) {
-          allPdfs[clientId] = [];
+  if (!topRightEmployeeID || !employeeData[topRightEmployeeID]) {
+    throw new Error(`Employee ID not found or invalid on page ${i + 1} (expected after "Cód. trab" in top-right)`);
+  }
+            const data = employeeData[topRightEmployeeID];
+            const fullName = data.name;
+            const clientId = data.contactId;
+
+            const newDoc = await PDFLib.PDFDocument.create();
+            const [copiedPage] = await newDoc.copyPages(pdfDoc, [i]);
+            newDoc.addPage(copiedPage);
+
+            const pdfBytes = await newDoc.save();
+            const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            pdfUrls.push(pdfUrl);
+
+            // Convert to base64 for storage
+            const pdfBase64 = await blobToBase64(pdfBlob);
+
+            const fileName = `${month}_${year}_${topRightEmployeeID}_${clientId}.pdf`;
+            pdfLinks.push({ url: pdfUrl, fileName, text: `${fullName} ${clientId} ${month}/${year}` });
+
+            await uploadToGHLMedia(pdfBlob, fileName);
+
+            storeClientPDFs(clientId, fullName, [pdfBase64], month, year, topRightEmployeeID, fileName);
+          }
+
+          pdfLinksContainer.style.display = 'block'; // Show pdfLinks
+          pdfLinks.forEach(({ url, fileName, text }) => {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            link.textContent = text;
+            pdfLinksContainer.appendChild(link);
+          });
+
+          alert(`Generated and uploaded ${pageCount} PDF(s) successfully! Click the links below to download.`);
+          uploadStatus.innerHTML = `Generated and uploaded ${pageCount} PDF(s) successfully!`;
+          pdfFileInput.value = ''; // Clear the file input
+          setTimeout(() => {
+            location.reload(); // Refresh the page after 3 seconds
+          }, 3000);
+        } catch (error) {
+          uploadStatus.style.display = 'block'; // Show uploadStatus on error
+          uploadStatus.className = 'error';
+          uploadStatus.innerHTML = `Error: ${error.message}`;
+          console.error('Full error details:', error);
+          if (error.stack) {
+            console.error('Error stack trace:', error.stack);
+          }
         }
-        
-        // Add new PDFs to the client's list
-        const timestamp = new Date().toISOString();
-        pdfUrls.forEach((url, index) => {
-          const fileName = `${fullName}_${clientId}_Page${index + 1}.pdf`;
+      }
+
+      document.getElementById('splitBtn').addEventListener('click', splitAndUploadPDF);
+
+      function storeClientPDFs(clientId, fullName, pdfData, month, year, employeeID, fileName) {
+        try {
+          const storedData = localStorage.getItem('generatedPdfs');
+          const allPdfs = storedData ? JSON.parse(storedData) : {};
+
+          if (!allPdfs[clientId]) {
+            allPdfs[clientId] = [];
+          }
+
+          const timestamp = new Date().toISOString();
           allPdfs[clientId].push({
             fullName,
             clientId,
+            month,
+            year,
+            employeeID,
             fileName,
-            url,
+            data: pdfData[0], // base64 data
             timestamp
           });
-        });
-        
-        // Save updated data to localStorage
-        localStorage.setItem('generatedPdfs', JSON.stringify(allPdfs));
-        console.log(`Stored ${pdfUrls.length} PDF(s) for client ${clientId}`);
-      } catch (error) {
-        console.error('Error storing PDF information:', error);
-      }
-    }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // Initialize any setup if needed
+          localStorage.setItem('generatedPdfs', JSON.stringify(allPdfs));
+          console.log(`Stored PDF for client ${clientId}`);
+        } catch (error) {
+          console.error('Error storing PDF information:', error);
+        }
+      }
+
       window.addEventListener('unload', () => {
         pdfUrls.forEach(url => URL.revokeObjectURL(url));
       });
-    });
+    }); // Close DOMContentLoaded here
   </script>
 </body>
 </html>
