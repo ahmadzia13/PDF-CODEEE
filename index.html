@@ -4,31 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PDF Page Splitter with GHL Upload</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'></svg>">
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
     
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      background-color: #f8f9fa;
-      color: #333;
-      line-height: 1.6;
-      padding: 20px;
-      min-height: 100vh;
-    }
     
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    
-    h1 {
+
+
+    .ah-con h1 {
       font-weight: 700;
       font-size: 28px;
       color: #212529;
@@ -37,40 +21,49 @@
       border-bottom: 1px solid #e9ecef;
       text-align: center;
     }
-    
-    .form-group {
-      margin-bottom: 20px;
+
+    .ah-con .form-group {
+
       background: white;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      border: 1px solid #e9ecef;
-    }
     
-    label {
+    
+  
+    }
+    .ah-con .container{
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        
+        padding: 20px;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+    }
+
+    .ah-con label {
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
       color: #495057;
     }
-    
-    input {
+
+    .ah-con input {
       width: 100%;
-      padding: 12px 16px;
+     padding-bottom: 10px;
+     padding-top: 10px;
+     padding-left: 10px;
       border: 1px solid #ced4da;
       border-radius: 8px;
       font-family: 'Inter', sans-serif;
       font-size: 16px;
       transition: all 0.2s ease;
     }
-    
-    input:focus {
+
+    .ah-con input:focus {
       outline: none;
       border-color: #0d6efd;
       box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
     }
-    
-    button {
+
+    .ah-con button {
       padding: 12px 24px;
       background-color: #0d6efd;
       color: white;
@@ -84,105 +77,72 @@
       display: block;
       width: 100%;
       margin: 20px 0;
-    }
     
-    button:hover {
+    }
+
+    .ah-con button:hover {
       background-color: #0b5ed7;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    
-    button:active {
+
+    .ah-con button:active {
       transform: translateY(0);
     }
-    
-    #pdfLinks {
-      margin-top: 30px;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      border: 1px solid #e9ecef;
+
+    .ah-con #pdfLinks {
+      display: none;
+    }
+
+
+    .ah-con #pdfLinks a {
+      display: none;
+  
     }
     
-    #pdfLinks h2 {
-      font-weight: 600;
-      font-size: 20px;
-      color: #212529;
-      margin-bottom: 15px;
-    }
-    
-    #pdfLinks a {
-      display: block;
-      margin: 10px 0;
-      color: #0d6efd;
-      text-decoration: none;
-      padding: 12px 16px;
-      border-radius: 8px;
-      background-color: #f8f9fa;
-      transition: all 0.2s ease;
-      border: 1px solid #e9ecef;
-    }
-    
-    #pdfLinks a:hover {
-      background-color: #0d6efd;
-      color: white;
-      border-color: #0d6efd;
-      transform: translateX(5px);
-    }
-    
-    #uploadStatus {
-      margin-top: 20px;
+
+
+    .ah-con #uploadStatus {
       padding: 16px;
       border-radius: 8px;
       text-align: center;
       font-weight: 500;
-      background-color: #d1ecf1;
+      background-color: lightgreen;
       color: #0c5460;
       border: 1px solid #bee5eb;
+      display: none; /* Hide initially */
     }
-    
-    #uploadStatus.error {
+
+    .ah-con #uploadStatus.error {
       background-color: #f8d7da;
       color: #721c24;
       border-color: #f5c6cb;
     }
     
     @media (max-width: 768px) {
-      h1 {
+      .ah-con h1 {
         font-size: 24px;
       }
-      
-      .form-group {
+
+      .ah-con .form-group {
         padding: 15px;
       }
     }
   </style>
 </head>
 <body>
+  <div class="ah-con">
   <div class="container">
-    <h1>Split PDF  Uploader </h1>
-    <div class="form-group">
-      <label for="firstName">First Name:</label>
-      <input type="text" id="firstName" placeholder="Enter first name">
-    </div>
-    <div class="form-group">
-      <label for="lastName">Last Name:</label>
-      <input type="text" id="lastName" placeholder="Enter last name">
-    </div>
-    <div class="form-group">
-      <label for="clientId">Contact ID:</label>
-      <input type="text" id="clientId" placeholder="Enter contact ID">
-    </div>
+   
+   
     <div class="form-group">
       <label for="pdfFile">Upload PDF:</label>
       <input type="file" id="pdfFile" accept="application/pdf">
     </div>
     <button onclick="splitAndUploadPDF()">Split and Upload PDFs</button>
-    <div id="pdfLinks">
-      <h2>Generated PDFs</h2>
-    </div>
+    <div id="pdfLinks"></div>
     <div id="uploadStatus"></div>
+  </div>
   </div>
 
   <script>
@@ -241,90 +201,114 @@
       }
     }
 
-   async function splitAndUploadPDF() {
-  const firstName = document.getElementById('firstName').value.trim();
-  const lastName = document.getElementById('lastName').value.trim();
-  const clientId = document.getElementById('clientId').value.trim();
-  const pdfFileInput = document.getElementById('pdfFile');
-  const pdfLinksContainer = document.getElementById('pdfLinks');
-  const uploadStatus = document.getElementById('uploadStatus');
+    async function splitAndUploadPDF() {
+      // Get parameters from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const fullName = urlParams.get('fullName')?.trim();
+      const clientId = urlParams.get('clientId')?.trim();
+      const pdfFileInput = document.getElementById('pdfFile');
+      const pdfLinksContainer = document.getElementById('pdfLinks');
+      const uploadStatus = document.getElementById('uploadStatus');
 
-  pdfLinksContainer.innerHTML = '';
-  uploadStatus.innerHTML = '';
-  pdfUrls.forEach(url => URL.revokeObjectURL(url));
-  pdfUrls = [];
+      // Check if elements exist
+      if (!pdfLinksContainer) {
+        console.error('Error: pdfLinks element not found in DOM');
+     
+        return;
+      }
+      if (!uploadStatus) {
+        console.error('Error: uploadStatus element not found in DOM');
+     
+        return;
+      }
 
-  if (!firstName || !lastName || !clientId) {
-    alert('Please fill in all fields (First Name, Last Name, Contact ID).');
-    return;
-  }
+      pdfLinksContainer.innerHTML = '';
+      uploadStatus.innerHTML = '';
+      pdfUrls.forEach(url => URL.revokeObjectURL(url));
+      pdfUrls = [];
 
-  if (!pdfFileInput.files || pdfFileInput.files.length === 0) {
-    alert('Please upload a PDF file.');
-    return;
-  }
+      if (!fullName || !clientId) {
+        alert('Please provide fullName and clientId in the URL parameters.');
+        return;
+      }
 
-  try {
-    const file = pdfFileInput.files[0];
-    const arrayBuffer = await file.arrayBuffer();
+      if (!pdfFileInput.files || pdfFileInput.files.length === 0) {
+        alert('Please upload a PDF file.');
+        return;
+      }
 
-    // Validate PDF and log first 10 bytes for debugging
-    const firstBytes = new Uint8Array(arrayBuffer.slice(0, 10));
-    const pdfSignature = new TextDecoder().decode(firstBytes);
-    console.log('First 10 bytes of uploaded file:', pdfSignature, firstBytes);
-    if (!pdfSignature.startsWith('%PDF-')) {
-      throw new Error('Uploaded file is not a valid PDF (missing PDF header). First 10 bytes: ' + pdfSignature);
+      try {
+        const file = pdfFileInput.files[0];
+        const arrayBuffer = await file.arrayBuffer();
+
+        // Validate PDF and log first 10 bytes for debugging
+        const firstBytes = new Uint8Array(arrayBuffer.slice(0, 10));
+        const pdfSignature = new TextDecoder().decode(firstBytes);
+        console.log('First 10 bytes of uploaded file:', pdfSignature, firstBytes);
+        if (!pdfSignature.startsWith('%PDF-')) {
+          throw new Error('Uploaded file is not a valid PDF (missing PDF header). First 10 bytes: ' + pdfSignature);
+        }
+
+        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+        const pageCount = pdfDoc.getPageCount();
+
+        if (pageCount === 0) {
+          alert('The uploaded PDF is empty.');
+          return;
+        }
+
+        uploadStatus.style.display = 'block'; // Show uploadStatus
+        uploadStatus.innerHTML = 'Splitting PDF and generating links...';
+        const pdfLinks = [];
+
+        for (let i = 0; i < pageCount; i++) {
+          const newDoc = await PDFLib.PDFDocument.create();
+          const [page] = await newDoc.copyPages(pdfDoc, [i]);
+          newDoc.addPage(page);
+
+          const pdfBytes = await newDoc.save();
+          const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+          const pdfUrl = URL.createObjectURL(pdfBlob);
+          pdfUrls.push(pdfUrl);
+
+          const fileName = `${fullName}_${clientId}_Page${i + 1}.pdf`;
+          pdfLinks.push({ url: pdfUrl, fileName, text: `${fullName} ${clientId} Page ${i + 1}` });
+
+          await uploadToGHLMedia(pdfBlob, fileName);
+        }
+
+        // Populate PDF links and show containers after all uploads are complete
+        pdfLinksContainer.style.display = 'block'; // Show pdfLinks
+        pdfLinks.forEach(({ url, fileName, text }) => {
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = fileName;
+          link.textContent = text;
+          pdfLinksContainer.appendChild(link);
+        });
+
+     
+setTimeout(() => {
+  location.reload(); // Refresh the page after 3 seconds
+}, 3000);
+storeClientPDFs(clientId, fullName, pdfUrls);
+        uploadStatus.innerHTML = `Generated and uploaded ${pageCount} PDF(s) successfully!`;
+
+        // Store PDF information in localStorage
+        storeClientPDFs(clientId, fullName, pdfUrls);
+      } catch (error) {
+        uploadStatus.style.display = 'block'; // Show uploadStatus on error
+        uploadStatus.className = 'error';
+        uploadStatus.innerHTML = `Error: ${error.message}`;
+        console.error('Full error details:', error);
+        if (error.stack) {
+          console.error('Error stack trace:', error.stack);
+        }
+      
+      }
     }
 
-    const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-    const pageCount = pdfDoc.getPageCount();
-
-    if (pageCount === 0) {
-      alert('The uploaded PDF is empty.');
-      return;
-    }
-
-    uploadStatus.innerHTML = 'Splitting PDF and generating links...';
-
-    for (let i = 0; i < pageCount; i++) {
-      const newDoc = await PDFLib.PDFDocument.create();
-      const [page] = await newDoc.copyPages(pdfDoc, [i]);
-      newDoc.addPage(page);
-
-      const pdfBytes = await newDoc.save();
-      const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      pdfUrls.push(pdfUrl);
-
-      const fileName = `${firstName}_${lastName}_${clientId}_Page${i + 1}.pdf`;
-      const link = document.createElement('a');
-      link.href = pdfUrl;
-      link.download = fileName;
-      link.textContent = `${firstName} ${lastName} ${clientId} Page ${i + 1}`;
-      pdfLinksContainer.appendChild(link);
-
-      uploadStatus.innerHTML = `Uploading ${fileName} to GHL...`;
-      await uploadToGHLMedia(pdfBlob, fileName);
-      uploadStatus.innerHTML += `<br>Uploaded ${fileName} to GHL Media Library.`;
-    }
-
-    alert(`Generated and uploaded ${pageCount} PDF(s) successfully! Click the links below to download.`);
-    uploadStatus.innerHTML += `<br>All ${pageCount} PDFs uploaded to GHL Media Library.`;
-
-    // Store PDF information in localStorage
-    storeClientPDFs(clientId, firstName, lastName, pdfUrls);
-  } catch (error) {
-    uploadStatus.className = 'error';
-    uploadStatus.innerHTML = `Error: ${error.message}`;
-    console.error('Full error details:', error);
-    if (error.stack) {
-      console.error('Error stack trace:', error.stack);
-    }
-    alert(`An error occurred: ${error.message}`);
-  }
-}
-
-    function storeClientPDFs(clientId, firstName, lastName, pdfUrls) {
+    function storeClientPDFs(clientId, fullName, pdfUrls) {
       try {
         // Get existing data from localStorage
         const storedData = localStorage.getItem('generatedPdfs');
@@ -338,10 +322,9 @@
         // Add new PDFs to the client's list
         const timestamp = new Date().toISOString();
         pdfUrls.forEach((url, index) => {
-          const fileName = `${firstName}_${lastName}_${clientId}_Page${index + 1}.pdf`;
+          const fileName = `${fullName}_${clientId}_Page${index + 1}.pdf`;
           allPdfs[clientId].push({
-            firstName,
-            lastName,
+            fullName,
             clientId,
             fileName,
             url,
@@ -357,8 +340,11 @@
       }
     }
 
-    window.addEventListener('unload', () => {
-      pdfUrls.forEach(url => URL.revokeObjectURL(url));
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize any setup if needed
+      window.addEventListener('unload', () => {
+        pdfUrls.forEach(url => URL.revokeObjectURL(url));
+      });
     });
   </script>
 </body>

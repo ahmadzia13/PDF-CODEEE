@@ -113,45 +113,15 @@
       font-size: 14px;
       margin-bottom: 20px;
       padding-bottom: 16px;
-      border-bottom: 1px solid #e9ecef;
+   border: 1px solid #e9ecef; /* Light gray border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 16px; /* Consistent padding inside the box */
     }
     
-    .pdf-actions {
-      display: flex;
-      gap: 12px;
-    }
+   
     
-    .pdf-action {
-      padding: 10px 16px;
-      background-color: #f8f9fa;
-      color: #0d6efd;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: 500;
-      font-size: 14px;
-      transition: all 0.2s ease;
-      border: 1px solid #e9ecef;
-      flex: 1;
-      text-align: center;
-    }
+  
     
-    .pdf-action:hover {
-      background-color: #0d6efd;
-      color: white;
-      border-color: #0d6efd;
-    }
-    
-    .pdf-delete {
-      background-color: #fff5f5;
-      color: #dc3545;
-      border-color: #f5c6cb;
-    }
-    
-    .pdf-delete:hover {
-      background-color: #dc3545;
-      color: white;
-      border-color: #dc3545;
-    }
     
     .no-pdfs {
       text-align: center;
@@ -166,23 +136,98 @@
       color: #495057;
     }
     
-    #status {
-      margin-top: 30px;
-      padding: 16px;
-      border-radius: 8px;
-      text-align: center;
-      font-weight: 500;
-      background-color: #d1ecf1;
-      color: #0c5460;
-      border: 1px solid #bee5eb;
-    }
-    
     #status.error {
       background-color: #f8d7da;
       color: #721c24;
       border-color: #f5c6cb;
     }
-    
+    .pdf-icon {
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+  margin-right: 8px;
+ 
+}
+.pdf-title {
+  font-weight: 600;
+  font-size: 18px;
+  color: #212529;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+.created {
+   margin-left: 50px;
+}
+.menu-button {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  margin-top: 27px;
+}
+
+.menu-button:hover {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.pdf-actions {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 24px;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  width: 120px;
+  z-index: 10;
+}
+
+.pdf-actions.open {
+  display: flex;
+}
+
+.pdf-action {
+  padding: 8px 16px;
+  background-color: #f8f9fa;
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  border: none;
+  text-align: left;
+  width: 100%;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.pdf-action:last-child {
+  border-bottom: none;
+}
+
+.pdf-action:hover {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.pdf-delete {
+  color: #dc3545;
+}
+
+.pdf-delete:hover {
+  background-color: #dc3545;
+  color: white;
+}
     @media (max-width: 768px) {
       .pdf-grid {
         grid-template-columns: 1fr;
@@ -203,8 +248,8 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>Client PDFs</h1>
-      <a href="index.html" class="back-link">← Back to Generator</a>
+
+     
     </div>
     <div id="clientInfo"></div>
     <div id="pdfList" class="pdf-list">
@@ -217,24 +262,28 @@
     </div>
     <div id="status"></div>
   </div>
-
+<svg style="display: none;" id="pdf-icon-svg">
+  <symbol id="pdf-icon" viewBox="0 0 24 24">
+    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zm-2 14h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V8h4v2z" fill="#6B46C1"/>
+    <path d="M13 12h4v2h-4zm0 4h4v2h-4z" fill="white"/>
+  </symbol>
+</svg>
   <script>
     // Get contact ID from URL
-    console.log('Window location:', window.location);
-    console.log('Window search:', window.location.search);
-    console.log('Window pathname:', window.location.pathname);
+
     
     const urlParams = new URLSearchParams(window.location.search);
     const contactIdFromQuery = urlParams.get('clientId');
     const contactIdFromPath = window.location.pathname.split('/').pop();
-    
-    console.log('Contact ID from query:', contactIdFromQuery);
-    console.log('Contact ID from path:', contactIdFromPath);
-    
+
+    const locationId = urlParams.get('locationId')?.trim() || "qQoaeHK8TVVJCWXTtNWN"; // add location id
+    // add token
+    const accessToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2NzQxOTg4LjQ3MiwiZXhwIjoxNzU2ODI4Mzg4LjQ3Mn0.SHZ7Aif9GVfBbtvg6eojvg0AFlIOX5m1hHSKDTa6OqLWc5-MqJHZEVvdzZJ-6B3vhKLX4lBHVPn5mbjzShu_n06JLb2iAYp_DHEJHAYv9bYnMvawAkPep1DHqzpzUS_Eb5hsgeWlOC821Teh8MVRkdFvbH-jhpRvidssh81mXofZWJkeGZ_1MixTijtN3lVYHzLw5IJrWTLqLpVS4d94Yr01MWig1p5ZcaQHtA8P_XWLNMB3h7i-Z8iaqH7z2v0l9PZLRWWdgOdTP3jGTOx_xbmc34JmDHG9uF4WQOtXlkXB-wlOQmTIn4f0ZYSdiK_B3YHWDo00EPVe5hZKZD84pcYBUiGiPatdnwCmL08ZZvatKW2h8VBciy54kKO1y1AjeXKMD8GFLAgBwur2DWns52fDea8qB0krxH-I7fo5Lz30U-7JTrnrz0eBPcnJnW-v2B1zAIrs5C55cgnH-aA-EDbzK28aXmoredS4i3H1DTviUoLZeqLIyczMcU0Sv13bGmPfd-0ZJRI_wDEHcUUwMzkkCg5sEmd0hk0ts84PO-PsTSZsBH_Uml7bg9V2GJC4TZZ2TjNkVBNWPcGlLlYQvvny1cA47UzRhxgwzvi0nq-uRoAUgCQacZ9m0Nsgnmw4yy89IHj1Vo2ND3CEtlkwSKCUxyP7WYLB9BxD4qAOpic"
+
     const contactId = contactIdFromQuery || contactIdFromPath;
     
     if (contactId) {
-      document.getElementById('clientInfo').innerHTML = `<h2>PDFs for Contact ID: ${contactId}</h2>`;
+      document.getElementById('clientInfo').innerHTML = `<h2>Uploaded PDFs</h2>`;
       loadClientPDFs(contactId);
     } else {
       document.getElementById('pdfList').innerHTML = '<div class="pdf-grid"><div class="no-pdfs"><h3>No Contact ID</h3><p>No contact ID was specified.</p></div></div>';
@@ -246,11 +295,11 @@
       
       try {
         // Fetch PDF data from API
-        const url = `https://services.leadconnectorhq.com/medias/files?limit=50&sortBy=createdAt&sortOrder=desc&type=file&query=${contactId}&altType=location&altId=qQoaeHK8TVVJCWXTtNWN`;
+        const url = `https://services.leadconnectorhq.com/medias/files?limit=50&sortBy=createdAt&sortOrder=desc&type=file&query=${contactId}&altType=location&altId=${locationId}`;
         const options = {
           method: 'GET',
           headers: {
-            Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2NzQxOTg4LjQ3MiwiZXhwIjoxNzU2ODI4Mzg4LjQ3Mn0.SHZ7Aif9GVfBbtvg6eojvg0AFlIOX5m1hHSKDTa6OqLWc5-MqJHZEVvdzZJ-6B3vhKLX4lBHVPn5mbjzShu_n06JLb2iAYp_DHEJHAYv9bYnMvawAkPep1DHqzpzUS_Eb5hsgeWlOC821Teh8MVRkdFvbH-jhpRvidssh81mXofZWJkeGZ_1MixTijtN3lVYHzLw5IJrWTLqLpVS4d94Yr01MWig1p5ZcaQHtA8P_XWLNMB3h7i-Z8iaqH7z2v0l9PZLRWWdgOdTP3jGTOx_xbmc34JmDHG9uF4WQOtXlkXB-wlOQmTIn4f0ZYSdiK_B3YHWDo00EPVe5hZKZD84pcYBUiGiPatdnwCmL08ZZvatKW2h8VBciy54kKO1y1AjeXKMD8GFLAgBwur2DWns52fDea8qB0krxH-I7fo5Lz30U-7JTrnrz0eBPcnJnW-v2B1zAIrs5C55cgnH-aA-EDbzK28aXmoredS4i3H1DTviUoLZeqLIyczMcU0Sv13bGmPfd-0ZJRI_wDEHcUUwMzkkCg5sEmd0hk0ts84PO-PsTSZsBH_Uml7bg9V2GJC4TZZ2TjNkVBNWPcGlLlYQvvny1cA47UzRhxgwzvi0nq-uRoAUgCQacZ9m0Nsgnmw4yy89IHj1Vo2ND3CEtlkwSKCUxyP7WYLB9BxD4qAOpic',
+            Authorization: 'Bearer ' + accessToken,
             Version: '2021-07-28',
             Accept: 'application/json'
           }
@@ -342,24 +391,56 @@
             }
           }
           
-          html += `
-            <div class="pdf-item">
-              <h3>${namePart}</h3>
-              <div class="pdf-meta">
-                <div>File: ${displayName}</div>
-                <div>Created: ${new Date(createdAt).toLocaleString()}</div>
-              </div>
-              <div class="pdf-actions">
-                <a href="${fileUrl}" download="${displayName}" class="pdf-action">Download</a>
-                <a href="${fileUrl}" target="_blank" class="pdf-action">View</a>
-                <button class="pdf-action pdf-delete" data-file-id="${fileId}" data-file-name="${displayName}">Delete</button>
-              </div>
-            </div>
-          `;
+  html += `
+  <div class="pdf-item">
+    <div class="pdf-meta">
+      <div class="pdf-title"><svg class="pdf-icon"><use href="#pdf-icon"></use></svg> File: ${displayName}</div>
+      <div class="created">Created: ${new Date(createdAt).toLocaleString()}</div>
+    </div>
+  
+   <button class="menu-button" data-index="${index}">⋮</button>
+    <div class="pdf-actions" id="menu-${index}">
+      <a href="${fileUrl}" target="_blank" class="pdf-action">View</a>
+      <a href="${fileUrl}" download="${displayName}" class="pdf-action">Download</a>
+      <button class="pdf-action pdf-delete" data-file-id="${fileId}" data-file-name="${displayName}">Delete</button>
+    </div>
+  </div>
+`;
         });
 
         pdfList.innerHTML = html;
-        status.innerHTML = `Loaded ${validFiles.length} PDF(s) for Contact ID: ${contactId}`;
+        status.innerHTML = ``;
+        // Add event listeners for menu buttons
+document.querySelectorAll('.menu-button').forEach(button => {
+  button.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const index = button.getAttribute('data-index');
+    const menu = document.getElementById(`menu-${index}`);
+    if (menu) {
+      const isOpen = menu.classList.contains('open');
+      
+      // Close all other menus
+      document.querySelectorAll('.pdf-actions').forEach(m => {
+        m.classList.remove('open');
+      });
+      
+      // Toggle current menu
+      if (!isOpen) {
+        menu.classList.add('open');
+      }
+    }
+  });
+});
+
+// Close menus when clicking outside
+document.addEventListener('click', (e) => {
+  if (!e.target.classList.contains('menu-button') && !e.target.closest('.pdf-actions')) {
+    document.querySelectorAll('.pdf-actions').forEach(menu => {
+      menu.classList.remove('open');
+    });
+  }
+});
       } catch (error) {
         console.error('Error loading contact PDFs:', error);
         pdfList.innerHTML = '<div class="pdf-grid"><div class="no-pdfs"><h3>Error Loading PDFs</h3><p>There was an error loading the PDFs. Please try again later.</p></div></div>';
@@ -368,6 +449,7 @@
       }
     }
     
+
     async function deleteFile(fileId, fileName) {
       if (!fileId) {
         alert('File ID is missing. Cannot delete file.');
@@ -385,16 +467,16 @@
       }
       
       const status = document.getElementById('status');
-      
+
       try {
         status.innerHTML = `Deleting ${fileName}...`;
         status.className = '';
-        
-        const url = `https://services.leadconnectorhq.com/medias/${fileId}?altType=location&altId=qQoaeHK8TVVJCWXTtNWN`;
+
+        const url = `https://services.leadconnectorhq.com/medias/${fileId}?altType=location&altId=${locationId}`;
         const options = {
           method: 'DELETE',
           headers: {
-            Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2NzQxOTg4LjQ3MiwiZXhwIjoxNzU2ODI4Mzg4LjQ3Mn0.SHZ7Aif9GVfBbtvg6eojvg0AFlIOX5m1hHSKDTa6OqLWc5-MqJHZEVvdzZJ-6B3vhKLX4lBHVPn5mbjzShu_n06JLb2iAYp_DHEJHAYv9bYnMvawAkPep1DHqzpzUS_Eb5hsgeWlOC821Teh8MVRkdFvbH-jhpRvidssh81mXofZWJkeGZ_1MixTijtN3lVYHzLw5IJrWTLqLpVS4d94Yr01MWig1p5ZcaQHtA8P_XWLNMB3h7i-Z8iaqH7z2v0l9PZLRWWdgOdTP3jGTOx_xbmc34JmDHG9uF4WQOtXlkXB-wlOQmTIn4f0ZYSdiK_B3YHWDo00EPVe5hZKZD84pcYBUiGiPatdnwCmL08ZZvatKW2h8VBciy54kKO1y1AjeXKMD8GFLAgBwur2DWns52fDea8qB0krxH-I7fo5Lz30U-7JTrnrz0eBPcnJnW-v2B1zAIrs5C55cgnH-aA-EDbzK28aXmoredS4i3H1DTviUoLZeqLIyczMcU0Sv13bGmPfd-0ZJRI_wDEHcUUwMzkkCg5sEmd0hk0ts84PO-PsTSZsBH_Uml7bg9V2GJC4TZZ2TjNkVBNWPcGlLlYQvvny1cA47UzRhxgwzvi0nq-uRoAUgCQacZ9m0Nsgnmw4yy89IHj1Vo2ND3CEtlkwSKCUxyP7WYLB9BxD4qAOpic',
+            Authorization: 'Bearer ' + accessToken,
             Version: '2021-07-28'
           }
         };
@@ -420,6 +502,7 @@
         status.innerHTML = `Error deleting ${fileName}: ${error.message}`;
         status.className = 'error';
       }
+
     }
     
     // Add event listeners to delete buttons
