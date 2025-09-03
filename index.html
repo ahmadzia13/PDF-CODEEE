@@ -209,56 +209,40 @@
       }
       checkLibrariesLoaded();
 
-      const accessToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2ODM4ODQyLjYyMiwiZXhwIjoxNzU2OTI1MjQyLjYyMn0.OqfqwO8Q7ks3iuO26hEsv9VrH2K7GlzEXbZCVoCaMJev8_jJcoQtz6roaJNi86_H206pIIU5V1CMIPpH0-t3sI_JJzKWBBPl88f9wmiimA4ZXL9Wdt7UKobnKTXUYJ0eSyNeVPqH1H7JrMfg9LpJMSxNxcqErQtzmgUOH7lA80zUfYDNjcPtEgAb2E5O_CFSCjCypd_z9TD_om4jMLUYELqZwqw8CINA0tZlMZPblbj6eI24m9pHzH_76HH_t0jkaecPuks6_9JdjdicKyp3P944PZquN5hNM82FD9D_9sDJgSBM-XPoTqgu2MZ_dNMvrFmY4vdFi1PS_RflrBSLJmFeV-NmogSh2xtV1ygIbRV5xPeb2R5SLfI-b40fDsNjZtSGEJWxEV9FTvC6ghudjOJJgEdmnoTVZ7mFU1ePhTlQobcHNoYrfjuvqQHqy450dXE-RHs3vUF_YK_UC9H4XrV9zbg25pzSQgcry5ojfeH9W2BG8FGZsdFGM-VcxOCUfinHJTutujwBRDoajPSE7L1UmrKehsEfJ8tL3o34uEfm4qDgt3qxmFInFflvKKJ8J5uVrlpOlvTFuiWEZw_h52T3jYsViRLvkU-l2ddJrWTnXo6BdZ-a48tNTEPxICzPnl-1jMhGEwwc0egL2rv4qxDW0xBYR45srA_AcqRRQcY';
-      const employeeData = {
-        '8': { name: 'John Doe', contactId: '123' },
-        '11': { name: 'Jane Smith', contactId: '456' },
-        '14': { name: 'Bob Johnson', contactId: '79' },
-        '19': { name: 'Bob Johnson', contactId: '89' },
-        '31': { name: 'Bob Johnson', contactId: '7889' },
-        '34': { name: 'Bob Johnson', contactId: '756489' },
-        '48': { name: 'Bob Johnson', contactId: '7645689' },
-        '49': { name: 'Bob Johnson', contactId: '7865469' },
-        '50': { name: 'Bob Johnson', contactId: '785649' },
-        '53': { name: 'Bob Johnson', contactId: '785463459' },
-        '57': { name: 'Bob Johnson', contactId: '783452359' },
-        '59': { name: 'Bob Johnson', contactId: '765674589' },
-        '66': { name: 'Bob Johnson', contactId: '783523453439' },
-        '68': { name: 'Bob Johnson', contactId: '78559' },
-        '69': { name: 'Bob Johnson', contactId: '72189' },
-        '72': { name: 'Bob Johnson', contactId: '71189' },
-        '74': { name: 'Bob Johnson', contactId: '11789' },
-        '76': { name: 'Bob Johnson', contactId: '22789' },
-        '77': { name: 'Bob Johnson', contactId: '33789' },
-        '81': { name: 'Bob Johnson', contactId: '33789' },
-        '87': { name: 'Bob Johnson', contactId: '44789' },
-        '88': { name: 'Bob Johnson', contactId: '55789' },
-        '90': { name: 'Bob Johnson', contactId: '66789' },
-        '91': { name: 'Bob Johnson', contactId: '667789' },
-        '92': { name: 'Bob Johnson', contactId: '6757789' },
-        '93': { name: 'Bob Johnson', contactId: '7856759' },
-        '95': { name: 'Bob Johnson', contactId: '75675689' },
-        '96': { name: 'Bob Johnson', contactId: '7567589' },
-        '97': { name: 'Bob Johnson', contactId: '567789' },
-        '101': { name: 'Bob Johnson', contactId: '567789' },
-        '102': { name: 'Bob Johnson', contactId: '5676789' },
-        '106': { name: 'Bob Johnson', contactId: '657789' },
-        '107': { name: 'Bob Johnson', contactId: '657789' },
-        '108': { name: 'Bob Johnson', contactId: '5675789' },
-        '109': { name: 'Bob Johnson', contactId: '567756789' },
-        '110': { name: 'Bob Johnson', contactId: '567789' },
-        '1': { name: 'Bob Johnson', contactId: '765789' }
-      };
+      const accessToken = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2OTI0MDg5LjQ1MywiZXhwIjoxNzU3MDEwNDg5LjQ1M30.l1mI4Z6S9tUPx5mdDjGEL1HNcmCZfjVEvt5F-m7IOaFWwoydkuHvB-M2fND5cDaDJrCVoLSRVSOhI0U0Y2FO_tCxBMKB0bJwHfCZleUev65Qat6ysfJfjmfKRfMVA2Xrl3mYrqwtzcJWTMJAWcanZxjAK_Nz_DXyd-5pzcCPvvYWyywQ_dPOCYnY3T-mN8-XIU-kaBW-bsMtsVHcf0apyG1biW1ULG8M0XvNBN9VCbQVsTkJDO8eRe9bdyCiGWySzfzjXKVRJDjtXmPkxIgUWXZTJH5mtnnxn2HF-Xr8GdzhwjUHXAu9MSCRXueVTBUrFWNauMPyQrueOtJ1Jl0VgIVmdNSTBDw2DkBucL3pDl3cBuPsZCD6yElvkmfKpUdVvPiJuYZwGBOoF-O2zEMeYnvV5WRPvUBr9JJIN73KIxySlaYnx643-1q7a8ltrqwPP95CKjsU5kBwAnDg0AvOgGpgRNqq77jPuaCpK_o59LzIrbL3xqvm9rC_0RDTMe75-Q5ZnoBuFLMMVDS2eBiY8vBM5uI3Y2I3mm5KDyssqRm9kxdC7hjpUNdiC4IYIY7FgBEAzdFaVmE0iWtIRZxpOSSex58BJEhvJ-63Ag6I89Mlu-pfhbxEo9rGRagRRaMjKLc4uxjBvvjsuE3EpTEifqF_AdwhMzohuf7xgHowHBg';
+      // Function to fetch employee data from Google Apps Script
+      async function fetchEmployeeData() {
+        try {
+          const response = await fetch('https://script.google.com/macros/s/AKfycbxnAKhr5gs5RjEdkr7gLonlWM-yomdfS-QckGrVbEyC-sHJnQXfcQjdDuvcYwkCid9ZMA/exec');
+          const data = await response.json();
+          console.log('Fetched employee data:', data);
 
-      function blobToBase64(blob) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        });
+          // Convert array to object keyed by EmployeeID (note: EmployeeID is a number, contactID has capital C and I)
+          const employeeData = {};
+          if (data && Array.isArray(data)) {
+            data.forEach(employee => {
+              if (employee.EmployeeID !== undefined && employee.contactID) {
+                // Convert EmployeeID to string for consistent key access
+                const employeeIdStr = employee.EmployeeID.toString();
+                employeeData[employeeIdStr] = {
+                  name: employee.Name || 'Unknown',
+                  contactId: employee.contactID
+                };
+              }
+            });
+          }
+
+          console.log('Processed employee data:', employeeData);
+          console.log('Available Employee IDs:', Object.keys(employeeData));
+          return employeeData;
+        } catch (error) {
+          console.error('Error fetching employee data:', error);
+          // Fallback to empty object if fetch fails
+          return {};
+        }
       }
-//hgrfghrgh
+
+      //hgrfghrgh
       async function uploadToGHLMedia(pdfBlob, fileName) {
         const url = 'https://services.leadconnectorhq.com/medias/upload-file';
         const form = new FormData();
@@ -348,6 +332,12 @@
           return;
         }
 
+        // Fetch employee data from Google Apps Script
+        uploadStatus.style.display = 'block';
+        uploadStatus.innerHTML = 'Fetching employee data...';
+        const employeeData = await fetchEmployeeData();
+        uploadStatus.innerHTML = 'Processing PDF...';
+
         try {
           const file = pdfFileInput.files[0];
           if (!file || file.type !== 'application/pdf') {
@@ -372,71 +362,100 @@
             return;
           }
 
+          // Parse employee ID from the first page
+          let topRightEmployeeID = null;
+          const firstPage = await pdfjsDoc.getPage(1);
+          const textContent = await firstPage.getTextContent();
+          const viewport = firstPage.getViewport({scale: 1});
+          const pageHeight = viewport.height;
+
+          // Debug: Log all text items
+          console.log(`Page 1 all text items (pageHeight: ${pageHeight}, count: ${textContent.items.length}):`);
+          for (const item of textContent.items) {
+            const { str, transform } = item;
+            const x = transform[4];
+            const y = pageHeight - transform[5];
+            console.log(`  "${str || '[empty]'}" at x=${x.toFixed(1)}, y=${y.toFixed(1)} (rawY: ${transform[5].toFixed(1)})`);
+          }
+
+          // Find "Cód." and "trab." anywhere on the page (more flexible matching)
+          let codX = 0, codY = 0, trabX = 0, trabY = 0;
+          for (const item of textContent.items) {
+            const { str, transform } = item;
+            const x = transform[4];
+            const y = pageHeight - transform[5];
+            const cleanStr = str.trim().toLowerCase();
+
+            // Check for combined "Cód. trab."
+            if (cleanStr.includes("cód") && cleanStr.includes("trab")) {
+              codX = x;
+              trabX = x + 50; // approximate width
+              codY = y;
+              trabY = y;
+              console.log(`Found "Cód. trab." combined at x=${codX}, y=${codY} (text: "${str.trim()}")`);
+            } else if (cleanStr.includes("cód")) {
+              codX = x;
+              codY = y;
+              console.log(`Found "Cód." at x=${codX}, y=${codY} (text: "${str.trim()}")`);
+            } else if (cleanStr.includes("trab")) {
+              trabX = x;
+              trabY = y;
+              console.log(`Found "trab." at x=${trabX}, y=${trabY} (text: "${str.trim()}")`);
+            }
+          }
+
+          // If found both parts, look for the number near them (same row or below)
+          if (codX > 0 && trabX > 0) {
+            const labelCenterX = (codX + trabX) / 2;
+            const labelY = codY; // Use the y of "Cód."
+
+            for (const item of textContent.items) {
+              const { str, transform } = item;
+              const x = transform[4];
+              const y = pageHeight - transform[5];
+
+              if (str.trim().match(/^\d+$/) && Math.abs(y - labelY) < 30 && x > labelCenterX && x < labelCenterX + 100) {
+                topRightEmployeeID = str.trim();
+                console.log(`Found ID "${topRightEmployeeID}" near "Cód. trab." at x=${x}, y=${y}`);
+                break;
+              }
+            }
+          }
+
+          // Fallback: if not found, look for any number in top-right area
+          if (!topRightEmployeeID) {
+            for (const item of textContent.items) {
+              const { str, transform } = item;
+              const x = transform[4];
+              const y = pageHeight - transform[5];
+
+              if (y < 200 && x > viewport.width * 0.6 && str.trim().match(/^\d+$/) && str.trim().length <= 3) {
+                topRightEmployeeID = str.trim();
+                console.log(`Fallback found ID "${topRightEmployeeID}" at x=${x}, y=${y}`);
+                break;
+              }
+            }
+          }
+
+          console.log(`Parsed Employee ID from PDF: "${topRightEmployeeID}" (type: ${typeof topRightEmployeeID})`);
+
+          if (!topRightEmployeeID || !employeeData[topRightEmployeeID]) {
+            const availableIds = Object.keys(employeeData);
+            console.error(`Employee ID "${topRightEmployeeID}" not found. Available IDs:`, availableIds);
+            console.error('Employee data keys and types:', availableIds.map(id => `${id} (${typeof id})`));
+            throw new Error(`Employee ID "${topRightEmployeeID}" not found in employee database. Available IDs: ${availableIds.join(', ')}. Please check if the employee data is correctly set up in the Google Sheet.`);
+          }
+
           uploadStatus.style.display = 'block'; // Show uploadStatus
           uploadStatus.innerHTML = 'Splitting PDF and generating links...';
           const pdfLinks = [];
-for (let i = 0; i < pageCount; i++) {
-  const pdfjsPage = await pdfjsDoc.getPage(i + 1);
-  const textContent = await pdfjsPage.getTextContent();
-  const viewport = pdfjsPage.getViewport({scale: 1});
-  const pageHeight = viewport.height;
-  let topRightEmployeeID = null;
 
-  // Debug: Log all text items in the top area
-  console.log(`Page ${i + 1} text items in top 200pt:`);
-  for (const item of textContent.items) {
-    const { str, transform } = item;
-    const x = transform[4];
-    const y = pageHeight - transform[5];
-    if (y < 200 && str.trim()) {
-      console.log(`  "${str.trim()}" at x=${x.toFixed(1)}, y=${y.toFixed(1)}`);
-    }
-  }
+          const data = employeeData[topRightEmployeeID];
+          const fullName = data.name;
+          const clientId = data.contactId;
+          console.log(`Matched Employee ID ${topRightEmployeeID} to ${fullName} with Contact ID ${clientId}`);
 
-  // Find "Cód." and "trab." in the top area
-  let codX = 0, codY = 0, trabX = 0, trabY = 0;
-  for (const item of textContent.items) {
-    const { str, transform } = item;
-    const x = transform[4];
-    const y = pageHeight - transform[5];
-
-    if (str.trim() === "Cód." && y < 200) {
-      codX = x;
-      codY = y;
-      console.log(`Found "Cód." at x=${codX}, y=${codY}`);
-    }
-    if (str.trim() === "trab." && y < 200) {
-      trabX = x;
-      trabY = y;
-      console.log(`Found "trab." at x=${trabX}, y=${trabY}`);
-    }
-  }
-
-  // If found both parts, look for the number below them
-  if (codX > 0 && trabX > 0) {
-    const labelCenterX = (codX + trabX) / 2;
-    const labelY = codY; // Use the y of "Cód."
-
-    for (const item of textContent.items) {
-      const { str, transform } = item;
-      const x = transform[4];
-      const y = pageHeight - transform[5];
-
-      if (str.trim().match(/^\d+$/) && y > labelY && y < labelY + 50 && Math.abs(x - labelCenterX) < 100) {
-        topRightEmployeeID = str.trim();
-        console.log(`Found ID "${topRightEmployeeID}" below "Cód. trab." at x=${x}, y=${y}`);
-        break;
-      }
-    }
-  }
-
-  if (!topRightEmployeeID || !employeeData[topRightEmployeeID]) {
-    throw new Error(`Employee ID not found or invalid on page ${i + 1} (expected after "Cód. trab" in top-right)`);
-  }
-            const data = employeeData[topRightEmployeeID];
-            const fullName = data.name;
-            const clientId = data.contactId;
-
+          for (let i = 0; i < pageCount; i++) {
             const newDoc = await PDFLib.PDFDocument.create();
             const [copiedPage] = await newDoc.copyPages(pdfDoc, [i]);
             newDoc.addPage(copiedPage);
@@ -446,27 +465,46 @@ for (let i = 0; i < pageCount; i++) {
             const pdfUrl = URL.createObjectURL(pdfBlob);
             pdfUrls.push(pdfUrl);
 
-            // Convert to base64 for storage
-            const pdfBase64 = await blobToBase64(pdfBlob);
-
             const fileName = `${month}_${year}_${topRightEmployeeID}_${clientId}.pdf`;
-            pdfLinks.push({ url: pdfUrl, fileName, text: `${fullName} ${clientId} ${month}/${year}` });
+            pdfLinks.push({
+              url: pdfUrl,
+              fileName,
+              text: `${fullName} ${clientId} ${month}/${year}`,
+              clientUrl: `client.html?contactId=${clientId}`
+            });
 
             await uploadToGHLMedia(pdfBlob, fileName);
 
-            storeClientPDFs(clientId, fullName, [pdfBase64], month, year, topRightEmployeeID, fileName);
+            storeClientPDFs(clientId, fullName, month, year, topRightEmployeeID, fileName);
           }
 
           pdfLinksContainer.style.display = 'block'; // Show pdfLinks
-          pdfLinks.forEach(({ url, fileName, text }) => {
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = fileName;
-            link.textContent = text;
-            pdfLinksContainer.appendChild(link);
+          pdfLinks.forEach(({ url, fileName, text, clientUrl }) => {
+            const linkContainer = document.createElement('div');
+            linkContainer.style.cssText = 'margin: 10px 0; padding: 15px; border: 1px solid #e9ecef; border-radius: 8px; background: #f8f9fa;';
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = fileName;
+            downloadLink.textContent = `📄 ${text}`;
+            downloadLink.style.cssText = 'display: block; color: #0d6efd; text-decoration: none; font-weight: 500; margin-bottom: 8px;';
+            downloadLink.onmouseover = () => downloadLink.style.textDecoration = 'underline';
+            downloadLink.onmouseout = () => downloadLink.style.textDecoration = 'none';
+
+            const clientLink = document.createElement('a');
+            clientLink.href = clientUrl;
+            clientLink.textContent = '🔗 View in Client Portal';
+            clientLink.style.cssText = 'display: inline-block; color: #28a745; text-decoration: none; font-weight: 500; font-size: 14px;';
+            clientLink.target = '_blank';
+            clientLink.onmouseover = () => clientLink.style.textDecoration = 'underline';
+            clientLink.onmouseout = () => clientLink.style.textDecoration = 'none';
+
+            linkContainer.appendChild(downloadLink);
+            linkContainer.appendChild(clientLink);
+            pdfLinksContainer.appendChild(linkContainer);
           });
 
-          alert(`Generated and uploaded ${pageCount} PDF(s) successfully! Click the links below to download.`);
+          alert(`Generated and uploaded ${pageCount} PDF(s) successfully! Click the links below to download or view in client portal.`);
           uploadStatus.innerHTML = `Generated and uploaded ${pageCount} PDF(s) successfully!`;
           pdfFileInput.value = ''; // Clear the file input
           setTimeout(() => {
@@ -485,7 +523,8 @@ for (let i = 0; i < pageCount; i++) {
 
       document.getElementById('splitBtn').addEventListener('click', splitAndUploadPDF);
 
-      function storeClientPDFs(clientId, fullName, pdfData, month, year, employeeID, fileName) {
+
+      function storeClientPDFs(clientId, fullName, month, year, employeeID, fileName) {
         try {
           const storedData = localStorage.getItem('generatedPdfs');
           const allPdfs = storedData ? JSON.parse(storedData) : {};
@@ -502,12 +541,12 @@ for (let i = 0; i < pageCount; i++) {
             year,
             employeeID,
             fileName,
-            data: pdfData[0], // base64 data
+            clientUrl: `client.html?contactId=${clientId}`,
             timestamp
           });
 
           localStorage.setItem('generatedPdfs', JSON.stringify(allPdfs));
-          console.log(`Stored PDF for client ${clientId}`);
+          console.log(`Stored PDF metadata for client ${clientId} with client portal URL`);
         } catch (error) {
           console.error('Error storing PDF information:', error);
         }
@@ -516,6 +555,30 @@ for (let i = 0; i < pageCount; i++) {
       window.addEventListener('unload', () => {
         pdfUrls.forEach(url => URL.revokeObjectURL(url));
       });
+    async function fetchMediaFiles() {
+      const url = 'https://services.leadconnectorhq.com/medias/files?sortBy=createdAt&sortOrder=asc&altType=location';
+      const options = {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSIsImNvbnRhY3RzLnJlYWRvbmx5IiwiY29udGFjdHMud3JpdGUiXSwiY2xpZW50IjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwIiwidmVyc2lvbklkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwIiwiY2xpZW50S2V5IjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2In0sImlhdCI6MTc1NjQ5MzMwOC41MTcsImV4cCI6MTc1NjU3OTcwOC41MTd9.SbgkpxDLlOYgFTp5rnMfi2d-wKWtSZnZZOeAVTehkMnDmNReQA_-E92RKT57NSFBMVqrPumfN1kk8tRmswWiMQCkyxrIwHTnV7HtD32iW6-tc0_49FO30TjDH60mB8amkTVlf3ByVjBtCk9x4vr9CfRORzsrsRgGbXrOU5520d5KhuvN1enzRD1DVg_oKW51qcwm-X3aePc_2QAHcWSWI8GEndQH7gKSR00mrrG5KfvyBafzGIz8Y-jFr5C-ttLO61nD6kDuWAjlk-ewPDlPxq2ytZmGMLIMirnr1ywudTjUeM0bSCQNAqd7RYNChdRceMLQNhu0xsaPt5Kz-v5f4YyrOhnpmIGlC1XQYTo0xGcnqDPWAR-wvHuslIzEyyUUUJqGtkhrJmPhs-37dFG4hXXhCskdZSqBVQnhdQVxA6sEQCTJ0lXK0uTbTE6qUoa2hGOHcCMjt667SkKyLJMcaP-kfXznEsYik81CbSF5oPYvCt3uP14-MdhfkPe9U6E222PUtQ-9APRrcMuEn2KvIRE3UbNN0yYkMfJ8q94z5eZ4AaZINpI8XfF8BN6mMgMDRc9tlvSYcLRwixRYRoPhjwVyVNsbQdslwE26LrZ-TJ_t3_ziwTmp4K6DUoyZshGlASRa4s_mLLRtioZDaFb6cSDbebRkKd5sulJxlDJsJ_U',
+          Version: '2021-07-28',
+          Accept: 'application/json'
+        }
+      };
+
+      try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Fetched media files:', data);
+        return data;
+      } catch (error) {
+        console.error('Error fetching media files:', error);
+        throw error;
+      }
+    }
     }); // Close DOMContentLoaded here
   </script>
 </body>

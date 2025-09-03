@@ -273,12 +273,13 @@
 
     
     const urlParams = new URLSearchParams(window.location.search);
-    const contactIdFromQuery = urlParams.get('clientId');
+    // Check for both 'contactId' and 'contactid' (case insensitive)
+    const contactIdFromQuery = urlParams.get('contactId') || urlParams.get('contactid');
     const contactIdFromPath = window.location.pathname.split('/').pop();
 
     const locationId = urlParams.get('locationId')?.trim() || "qQoaeHK8TVVJCWXTtNWN"; // add location id
     // add token
-    const accessToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2ODM4ODQyLjYyMiwiZXhwIjoxNzU2OTI1MjQyLjYyMn0.OqfqwO8Q7ks3iuO26hEsv9VrH2K7GlzEXbZCVoCaMJev8_jJcoQtz6roaJNi86_H206pIIU5V1CMIPpH0-t3sI_JJzKWBBPl88f9wmiimA4ZXL9Wdt7UKobnKTXUYJ0eSyNeVPqH1H7JrMfg9LpJMSxNxcqErQtzmgUOH7lA80zUfYDNjcPtEgAb2E5O_CFSCjCypd_z9TD_om4jMLUYELqZwqw8CINA0tZlMZPblbj6eI24m9pHzH_76HH_t0jkaecPuks6_9JdjdicKyp3P944PZquN5hNM82FD9D_9sDJgSBM-XPoTqgu2MZ_dNMvrFmY4vdFi1PS_RflrBSLJmFeV-NmogSh2xtV1ygIbRV5xPeb2R5SLfI-b40fDsNjZtSGEJWxEV9FTvC6ghudjOJJgEdmnoTVZ7mFU1ePhTlQobcHNoYrfjuvqQHqy450dXE-RHs3vUF_YK_UC9H4XrV9zbg25pzSQgcry5ojfeH9W2BG8FGZsdFGM-VcxOCUfinHJTutujwBRDoajPSE7L1UmrKehsEfJ8tL3o34uEfm4qDgt3qxmFInFflvKKJ8J5uVrlpOlvTFuiWEZw_h52T3jYsViRLvkU-l2ddJrWTnXo6BdZ-a48tNTEPxICzPnl-1jMhGEwwc0egL2rv4qxDW0xBYR45srA_AcqRRQcY";
+    const accessToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2OTI0MDg5LjQ1MywiZXhwIjoxNzU3MDEwNDg5LjQ1M30.l1mI4Z6S9tUPx5mdDjGEL1HNcmCZfjVEvt5F-m7IOaFWwoydkuHvB-M2fND5cDaDJrCVoLSRVSOhI0U0Y2FO_tCxBMKB0bJwHfCZleUev65Qat6ysfJfjmfKRfMVA2Xrl3mYrqwtzcJWTMJAWcanZxjAK_Nz_DXyd-5pzcCPvvYWyywQ_dPOCYnY3T-mN8-XIU-kaBW-bsMtsVHcf0apyG1biW1ULG8M0XvNBN9VCbQVsTkJDO8eRe9bdyCiGWySzfzjXKVRJDjtXmPkxIgUWXZTJH5mtnnxn2HF-Xr8GdzhwjUHXAu9MSCRXueVTBUrFWNauMPyQrueOtJ1Jl0VgIVmdNSTBDw2DkBucL3pDl3cBuPsZCD6yElvkmfKpUdVvPiJuYZwGBOoF-O2zEMeYnvV5WRPvUBr9JJIN73KIxySlaYnx643-1q7a8ltrqwPP95CKjsU5kBwAnDg0AvOgGpgRNqq77jPuaCpK_o59LzIrbL3xqvm9rC_0RDTMe75-Q5ZnoBuFLMMVDS2eBiY8vBM5uI3Y2I3mm5KDyssqRm9kxdC7hjpUNdiC4IYIY7FgBEAzdFaVmE0iWtIRZxpOSSex58BJEhvJ-63Ag6I89Mlu-pfhbxEo9rGRagRRaMjKLc4uxjBvvjsuE3EpTEifqF_AdwhMzohuf7xgHowHBg";
 
     function base64ToBlob(base64, mimeType) {
       const byteCharacters = atob(base64.split(',')[1]);
@@ -309,15 +310,21 @@
         const options = {
           method: 'GET',
           headers: {
-            Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhCbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJvbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2ODM4ODQyLjYyMiwiZXhwIjoxNzU2OTI1MjQyLjYyMn0.OqfqwO8Q7ks3iuO26hEsv9VrH2K7BlzEXbZCVoCaMJev8_jJcoQtz6roaJNi86_H206pIIU5V1CMIPpH0-t3sI_JJzKWBBPl88f9wmiimA4ZXL9Wdt7UKobnKTXUYJ0eSyNeVPqH1H7JrMfg9LpJMSxNxcqErQtzmgUOH7lA80zUfYDNjcPtEgAb2E5O_CFSCjCypd_z9TD_om4jMLUYELqZwqw8CINA0tZlMZPblbj6eI24m9pHzH_76HH_t0jkaecPuks6_9JdjdicKyp3P944PZquN5hNM82FD9D_9sDJgSBM-XPoTqgu2MZ_dNMvrFmY4vdFi1PS_RflrBSLJmFeV-NmogSh2xtV1ygIbRV5xPeb2R5SLfI-b40fDsNjZtSGEJWxEV9FTvC6ghudjOJJgEdmnoTVZ7mFU1ePhTlQobcHNoYrfjuvqQHqy450dXE-RHs3vUF_YK_UC9H4XrV9zbg25pzSQgcry5ojfeH9W2BG8FGZsdFGM-VcxOCUfinHJTutujwBRDoajPSE7L1UmrKehsEfJ8tL3o34uEfm4qDgt3qxmFInFflvKKJ8J5uVrlpOlvTFuiWEZw_h52T3jYsViRLvkU-l2ddJrWTnXo6BdZ-a48tNTEPxICzPnl-1jMhGEwwc0egL2rv4qxDW0xBYR45srA_AcqRRQcY',
+            Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoQ2xhc3MiOiJMb2NhdGlvbiIsImF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJzb3VyY2UiOiJJTlRFR1JBVElPTiIsInNvdXJjZUlkIjoiNjhhNGIzMjAwNDhiNTczYjA2ZWZhMzQwLW1laXRoYTZ2IiwiY2hhbm5lbCI6Ik9BVVRIIiwicHJpbWFyeUF1dGhDbGFzc0lkIjoicVFvYWVISzhUVlZKQ1dYVHROV04iLCJvYXV0aE1ldGEiOnsic2NvcGVzIjpbIm1lZGlhcy5yZWFkb25seSIsIm1lZGlhcy53cml0ZSJdLCJjbGllbnQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJ2ZXJzaW9uSWQiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAiLCJjbGllbnRLZXkiOiI2OGE0YjMyMDA0OGI1NzNiMDZlZmEzNDAtbWVpdGhhNnYifSwiaWF0IjoxNzU2OTI0MDg5LjQ1MywiZXhwIjoxNzU3MDEwNDg5LjQ1M30.l1mI4Z6S9tUPx5mdDjGEL1HNcmCZfjVEvt5F-m7IOaFWwoydkuHvB-M2fND5cDaDJrCVoLSRVSOhI0U0Y2FO_tCxBMKB0bJwHfCZleUev65Qat6ysfJfjmfKRfMVA2Xrl3mYrqwtzcJWTMJAWcanZxjAK_Nz_DXyd-5pzcCPvvYWyywQ_dPOCYnY3T-mN8-XIU-kaBW-bsMtsVHcf0apyG1biW1ULG8M0XvNBN9VCbQVsTkJDO8eRe9bdyCiGWySzfzjXKVRJDjtXmPkxIgUWXZTJH5mtnnxn2HF-Xr8GdzhwjUHXAu9MSCRXueVTBUrFWNauMPyQrueOtJ1Jl0VgIVmdNSTBDw2DkBucL3pDl3cBuPsZCD6yElvkmfKpUdVvPiJuYZwGBOoF-O2zEMeYnvV5WRPvUBr9JJIN73KIxySlaYnx643-1q7a8ltrqwPP95CKjsU5kBwAnDg0AvOgGpgRNqq77jPuaCpK_o59LzIrbL3xqvm9rC_0RDTMe75-Q5ZnoBuFLMMVDS2eBiY8vBM5uI3Y2I3mm5KDyssqRm9kxdC7hjpUNdiC4IYIY7FgBEAzdFaVmE0iWtIRZxpOSSex58BJEhvJ-63Ag6I89Mlu-pfhbxEo9rGRagRRaMjKLc4uxjBvvjsuE3EpTEifqF_AdwhMzohuf7xgHowHBg',
             Version: '2021-07-28',
             Accept: 'application/json'
           }
         };
 
+        console.log('Fetching PDFs for contact ID:', contactId);
+        console.log('API URL:', url);
+
         const response = await fetch(url, options);
+        console.log('API Response Status:', response.status);
+        console.log('API Response Headers:', Object.fromEntries(response.headers.entries()));
+
         const data = await response.json();
-        console.log('API Response:', data);
+        console.log('API Response Data:', data);
 
         // Check if the response has the expected structure
         if (!data || !Array.isArray(data.files) || data.files.length === 0) {
@@ -499,7 +506,7 @@ document.addEventListener('click', (e) => {
           status.className = '';
           
           // Reload the PDF list to reflect the deletion
-          const contactId = new URLSearchParams(window.location.search).get('clientId') ||
+          const contactId = new URLSearchParams(window.location.search).get('contactId') ||
                            window.location.pathname.split('/').pop();
           if (contactId) {
             loadClientPDFs(contactId);
